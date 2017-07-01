@@ -1,10 +1,13 @@
 #!/bin/bash
 
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-cp ./vimrc ~/.vim/vimrc
-ln ~/.vimrc ~/.vim/vimrc
+ln -s ~/vim-config/vimrc ~/.vimrc
 vim +PluginInstall +qall
 
-echo "dont forget to install / update YoucompleteMe"
-echo "https://github.com/j1z0/dotfiles.git"
+echo ""
+echo "Don't forget to install / update"
+echo "    * YouCompleteMe"
+echo "    * grip"
+echo ""
+echo "See: https://github.com/oliverxchen/vim-config/blob/master/README.md"
 

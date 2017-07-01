@@ -1,4 +1,4 @@
-"vundle
+" vundle
 set nocompatible
 filetype off
 
@@ -6,84 +6,77 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
-"git interface
+
+" git interface
 Plugin 'tpope/vim-fugitive'
-"filesystem
+
+" filesystem
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'kien/ctrlp.vim' 
+Plugin 'ctrlpvim/ctrlp.vim'
 
-"html
-"  isnowfy only compatible with python not python3
-Plugin 'isnowfy/python-vim-instant-markdown'
+" markdown
 Plugin 'jtratner/vim-flavored-markdown'
-Plugin 'suan/vim-instant-markdown'
-Plugin 'nelstrom/vim-markdown-preview'
-"python sytax checker
+Plugin 'JamshedVesuna/vim-markdown-preview'
+
+"python syntax checker
 Plugin 'nvie/vim-flake8'
 Plugin 'vim-scripts/Pydiction'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'scrooloose/syntastic'
+Plugin 'jmcantrell/vim-virtualenv'
 
 "auto-completion stuff
-"Plugin 'klen/python-mode'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'klen/rope-vim'
-"Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
+
 ""code folding
 Plugin 'tmhedberg/SimpylFold'
 
 "Colors!!!
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+
+" Be all end all
+Plugin 'jpalardy/vim-slime'
 
 call vundle#end()
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 filetype plugin indent on    " enables filetype detection
-let g:SimpylFold_docstring_preview = 1
 
-"autocomplete
+" Splits
+set splitbelow
+set splitright
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" Code folding
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za
+let g:SimplyFold_docstring_preview=1
+
+" autocomplete
 let g:ycm_autoclose_preview_window_after_completion=1
-
-"custom keys
-let mapleader=" "
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
-"
-call togglebg#map("<F5>")
-"colorscheme zenburn
-"set guifont=Monaco:h14
 
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
-"I don't like swap files
+" Swap file status
 set noswapfile
 
-"turn on numbering
+" line numbering on
 set nu
-
-"python with virtualenv support
-py << EOF
-import os.path
-import sys
-import vim
-if 'VIRTUA_ENV' in os.environ:
-  project_base_dir = os.environ['VIRTUAL_ENV']
-  sys.path.insert(0, project_base_dir)
-  activate_this = os.path.join(project_base_dir,'bin/activate_this.py')
-  execfile(activate_this, dict(__file__=activate_this))
-EOF
-
-"it would be nice to set tag files by the active virtualenv here
-":set tags=~/mytags "tags for ctags and taglist
-"omnicomplete
-autocmd FileType python set omnifunc=pythoncomplete#Complete
 
 "------------Start Python PEP 8 stuff----------------
 " Number of spaces that a pre-existing tab is equal to.
 au BufRead,BufNewFile *py,*pyw,*.c,*.h set tabstop=4
 
-"spaces for indents
+" spaces for indents
 au BufRead,BufNewFile *.py,*pyw set shiftwidth=4
 au BufRead,BufNewFile *.py,*.pyw set expandtab
 au BufRead,BufNewFile *.py set softtabstop=4
@@ -119,8 +112,34 @@ set backspace=indent,eol,start
 "Folding based on indentation:
 autocmd FileType python set foldmethod=indent
 "use space to open folds
-nnoremap <space> za 
+nnoremap <space> za
 "----------Stop python PEP 8 stuff--------------
 
 "js stuff"
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+
+" Color
+if has('gui_running')
+  set background=dark
+  colorscheme solarized
+else
+  colorscheme zenburn
+endif
+
+" for git, add spell checking and automatic wrapping at 72 columns
+autocmd Filetype gitcommit setlocal spell textwidth=72
+
+" NERDTree settings
+autocmd VimEnter * wincmd p
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" yank goes to clipboard
+set clipboard=unnamed
+
+" backspace behaviour
+set backspace=indent,eol,start
+
+" Github-flavored Markdown
+let vim_markdown_preview_github=1
+let vim_markdown_preview_browser='Google Chrome'
+let vim_markdown_preview_hotkey='<C-m>'
