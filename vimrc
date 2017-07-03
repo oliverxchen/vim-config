@@ -19,24 +19,24 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'jtratner/vim-flavored-markdown'
 Plugin 'JamshedVesuna/vim-markdown-preview'
 
-"python syntax checker
+" python syntax checker
 Plugin 'nvie/vim-flake8'
 Plugin 'vim-scripts/Pydiction'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'jmcantrell/vim-virtualenv'
 
-"auto-completion stuff
+" auto-completion stuff
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'ervandew/supertab'
 
-""code folding
+" code folding
 Plugin 'tmhedberg/SimpylFold'
 
-"Colors!!!
+" Appearance
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
-Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'vim-airline/vim-airline'
 
 " Be all end all
 Plugin 'jpalardy/vim-slime'
