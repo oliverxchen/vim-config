@@ -116,7 +116,15 @@ nnoremap <space> za
 "----------Stop python PEP 8 stuff--------------
 
 "js stuff"
-autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+autocmd FileType javascript setlocal shiftwidth=2
+
+" Number of spaces that a pre-existing tab is equal to.
+au BufRead,BufNewFile *.js set tabstop=2
+
+" spaces for indents
+au BufRead,BufNewFile *.js set shiftwidth=2
+au BufRead,BufNewFile *.js set expandtab
+au BufRead,BufNewFile *.js set softtabstop=2
 
 " Color
 if has('gui_running')
