@@ -11,7 +11,7 @@ $ ./setup_vim.sh
 ```bash
 $ cd ~/.vim/bundle/YouCompleteMe
 $ ./install.py                   # Option 1: no JS support
-$ ./install.py --tern-completed  # Option 2: JS support (need Node.js and npm installed)
+$ ./install.py --tern-completer  # Option 2: JS support (need Node.js and npm installed)
 ```
 
 ### Markdown preview installation

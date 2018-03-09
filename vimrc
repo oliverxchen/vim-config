@@ -33,6 +33,9 @@ Plugin 'ervandew/supertab'
 " code folding
 Plugin 'tmhedberg/SimpylFold'
 
+" commenting
+Plugin 'scrooloose/nerdcommenter'
+
 " Appearance
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
@@ -154,3 +157,15 @@ let vim_markdown_preview_hotkey='<C-m>'
 
 " Pydiction tab completion
 let g:pydiction_location = '~/.vim/bundle/Pydiction/complete-dict'
+
+" spaces vs tabs
+" Number of spaces that a pre-existing tab is equal to.
+au BufRead,BufNewFile *.md,*.json set tabstop=2
+
+" spaces for indents
+au BufRead,BufNewFile *.md,*.json set shiftwidth=2
+au BufRead,BufNewFile *.md,*.json set expandtab
+au BufRead,BufNewFile *.md,*.json set softtabstop=2
+
+" Add spaces after comment delimiters by default
+" let g:NERDSpaceDelims = 1
