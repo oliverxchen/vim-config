@@ -19,12 +19,15 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'jtratner/vim-flavored-markdown'
 Plugin 'JamshedVesuna/vim-markdown-preview'
 
-" python syntax checker
-Plugin 'nvie/vim-flake8'
-Plugin 'vim-scripts/Pydiction'
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'jmcantrell/vim-virtualenv'
+"" python syntax checker
+"Plugin 'nvie/vim-flake8'
+"Plugin 'vim-scripts/Pydiction'
+"Plugin 'vim-scripts/indentpython.vim'
+"Plugin 'scrooloose/syntastic'
+"Plugin 'jmcantrell/vim-virtualenv'
+
+" syntax checking
+Plugin 'w0rp/ale'
 
 " auto-completion stuff
 Plugin 'Valloric/YouCompleteMe'
@@ -122,12 +125,12 @@ nnoremap <space> za
 autocmd FileType javascript setlocal shiftwidth=2
 
 " Number of spaces that a pre-existing tab is equal to.
-au BufRead,BufNewFile *.js set tabstop=2
+au BufRead,BufNewFile *.js,*.sql set tabstop=2
 
 " spaces for indents
-au BufRead,BufNewFile *.js set shiftwidth=2
-au BufRead,BufNewFile *.js set expandtab
-au BufRead,BufNewFile *.js set softtabstop=2
+au BufRead,BufNewFile *.js,*.sql set shiftwidth=2
+au BufRead,BufNewFile *.js,*.sql set expandtab
+au BufRead,BufNewFile *.js,*.sql set softtabstop=2
 
 " Color
 if has('gui_running')
@@ -168,4 +171,8 @@ au BufRead,BufNewFile *.md,*.json set expandtab
 au BufRead,BufNewFile *.md,*.json set softtabstop=2
 
 " Add spaces after comment delimiters by default
-" let g:NERDSpaceDelims = 1
+let g:NERDSpaceDelims = 1
+
+" Linting
+let g:ale_linters = {'javascript': ['eslint'], 'python': ['flake8'], 'sql': ['sqlint']}
+let g:ale_fixers = {'javascript': ['eslint'], 'python': ['flake8'], 'sql': ['sqlint']}
