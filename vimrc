@@ -166,9 +166,9 @@ let g:pydiction_location = '~/.vim/bundle/Pydiction/complete-dict'
 au BufRead,BufNewFile *.md,*.json set tabstop=2
 
 " spaces for indents
-au BufRead,BufNewFile *.md,*.json set shiftwidth=2
-au BufRead,BufNewFile *.md,*.json set expandtab
-au BufRead,BufNewFile *.md,*.json set softtabstop=2
+au BufRead,BufNewFile *.md,*.json,*.yml,*.yaml set shiftwidth=2
+au BufRead,BufNewFile *.md,*.json,*.yml,*.yaml set expandtab
+au BufRead,BufNewFile *.md,*.json,*.yml,*.yaml set softtabstop=2
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
