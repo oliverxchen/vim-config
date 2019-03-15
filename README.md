@@ -1,7 +1,7 @@
 # Installation
 
 ```bash
-$ brew install vim --with-python3
+$ brew install vim
 $ git clone https://github.com/oliverxchen/vim-config.git ~/vim-config
 $ cd ~/vim-config
 $ ./setup_vim.sh
