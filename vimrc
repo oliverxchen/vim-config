@@ -19,18 +19,13 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'jtratner/vim-flavored-markdown'
 Plugin 'JamshedVesuna/vim-markdown-preview'
 
-"" python syntax checker
-"Plugin 'nvie/vim-flake8'
-"Plugin 'vim-scripts/Pydiction'
-"Plugin 'vim-scripts/indentpython.vim'
-"Plugin 'scrooloose/syntastic'
-"Plugin 'jmcantrell/vim-virtualenv'
-
 " syntax checking
 Plugin 'w0rp/ale'
 
 " auto-completion stuff
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'Shougo/deoplete.nvim'
+Plugin 'roxma/nvim-yarp'
+Plugin 'roxma/vim-hug-neovim-rpc'
 Plugin 'ervandew/supertab'
 
 " code folding
@@ -67,8 +62,8 @@ nnoremap <space> za
 let g:SimplyFold_docstring_preview=1
 
 " autocomplete
-let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:deoplete#enable_at_startup=1
+set wildmode=longest:full,full
 
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
@@ -146,6 +141,7 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 " NERDTree settings
 autocmd VimEnter * wincmd p
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+let NERDTreeShowHidden=1
 
 " yank goes to clipboard
 set clipboard=unnamed

@@ -7,13 +7,6 @@ $ cd ~/vim-config
 $ ./setup_vim.sh
 ```
 
-### Auto-complete installation
-```bash
-$ cd ~/.vim/bundle/YouCompleteMe
-$ ./install.py                   # Option 1: no JS support
-$ ./install.py --tern-completer  # Option 2: JS support (need Node.js and npm installed)
-```
-
 ### Markdown preview installation
 
 ```bash

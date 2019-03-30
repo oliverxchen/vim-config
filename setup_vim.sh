@@ -6,7 +6,6 @@ vim +PluginInstall +qall
 
 echo ""
 echo "Don't forget to install / update"
-echo "    * YouCompleteMe"
 echo "    * grip"
 echo ""
 echo "See: https://github.com/oliverxchen/vim-config/blob/master/README.md"
