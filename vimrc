@@ -49,7 +49,6 @@ filetype plugin indent on    " enables filetype detection
 
 " Splits
 set splitbelow
-set splitright
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -64,8 +63,6 @@ let g:SimplyFold_docstring_preview=1
 " autocomplete
 let g:deoplete#enable_at_startup=1
 set wildmode=longest:full,full
-
-let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
 " Swap file status
 set noswapfile
@@ -139,6 +136,7 @@ endif
 autocmd Filetype gitcommit setlocal spell textwidth=72
 
 " NERDTree settings
+let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 autocmd VimEnter * wincmd p
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 let NERDTreeShowHidden=1
