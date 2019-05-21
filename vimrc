@@ -39,7 +39,10 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
 Plugin 'vim-airline/vim-airline'
 
-" Be all end all
+" Python
+Plugin 'Vimjas/vim-python-pep8-indent'
+
+" Send to screen
 Plugin 'jpalardy/vim-slime'
 
 call vundle#end()
