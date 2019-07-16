@@ -172,7 +172,9 @@ let g:NERDSpaceDelims = 1
 
 " Linting
 let g:ale_linters = {'javascript': ['eslint'], 'python': ['flake8'], 'sql': ['sqlint']}
-let g:ale_fixers = {'javascript': ['eslint'], 'python': ['flake8'], 'sql': ['sqlint']}
+let g:ale_fixers = {'javascript': ['prettier'], 'python': ['autopep8'], 'sql': ['sqlint']}
+let g:ale_fix_on_save = 0
+noremap <c-m> :ALEFix<CR>
 
 " Auto-remove trailing whitespace
 autocmd BufWritePre * %s/\s\+$//e
