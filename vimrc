@@ -127,6 +127,10 @@ au BufRead,BufNewFile *.js,*.sql set shiftwidth=2
 au BufRead,BufNewFile *.js,*.sql set expandtab
 au BufRead,BufNewFile *.js,*.sql set softtabstop=2
 
+" golang
+autocmd Filetype go setlocal tabstop=2
+autocmd Filetype go setlocal shiftwidth=2
+
 " Color
 if has('gui_running')
   set background=dark
