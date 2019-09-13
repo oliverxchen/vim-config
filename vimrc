@@ -45,6 +45,13 @@ Plugin 'Vimjas/vim-python-pep8-indent'
 " Send to screen
 Plugin 'jpalardy/vim-slime'
 
+" toml
+Plugin 'cespare/vim-toml'
+
+" csv
+Plugin 'chrisbra/csv.vim'
+
+
 call vundle#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -123,9 +130,9 @@ autocmd FileType javascript setlocal shiftwidth=2
 au BufRead,BufNewFile *.js,*.sql set tabstop=2
 
 " spaces for indents
-au BufRead,BufNewFile *.js,*.sql set shiftwidth=2
-au BufRead,BufNewFile *.js,*.sql set expandtab
-au BufRead,BufNewFile *.js,*.sql set softtabstop=2
+au BufRead,BufNewFile *.js,*.sql,*.toml set shiftwidth=2
+au BufRead,BufNewFile *.js,*.sql,*.toml set expandtab
+au BufRead,BufNewFile *.js,*.sql,*.toml set softtabstop=2
 
 " golang
 autocmd Filetype go setlocal tabstop=2
@@ -176,7 +183,7 @@ let g:NERDSpaceDelims = 1
 
 " Linting
 let g:ale_linters = {'javascript': ['eslint'], 'python': ['flake8'], 'sql': ['sqlint']}
-let g:ale_fixers = {'javascript': ['prettier'], 'python': ['autopep8'], 'sql': ['sqlint']}
+let g:ale_fixers = {'javascript': ['prettier'], 'python': ['black'], 'sql': ['sqlint']}
 let g:ale_fix_on_save = 0
 noremap <c-m> :ALEFix<CR>
 
