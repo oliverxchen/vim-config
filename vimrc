@@ -64,6 +64,12 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+augroup CursorLineOnlyInActiveWindow   " active line indicator on active split
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
+augroup END
+
 " Code folding
 set foldmethod=indent
 set foldlevel=99
