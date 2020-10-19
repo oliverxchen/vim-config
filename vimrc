@@ -136,9 +136,9 @@ autocmd FileType javascript setlocal shiftwidth=2
 au BufRead,BufNewFile *.js,*.sql set tabstop=2
 
 " spaces for indents
-au BufRead,BufNewFile *.js,*.sql,*.toml set shiftwidth=2
-au BufRead,BufNewFile *.js,*.sql,*.toml set expandtab
-au BufRead,BufNewFile *.js,*.sql,*.toml set softtabstop=2
+au BufRead,BufNewFile *.js,*.sql,*.toml,*.tf set shiftwidth=2
+au BufRead,BufNewFile *.js,*.sql,*.toml,*.tf set expandtab
+au BufRead,BufNewFile *.js,*.sql,*.toml,*.tf set softtabstop=2
 
 " golang
 autocmd Filetype go setlocal tabstop=2
@@ -195,3 +195,5 @@ noremap <c-m> :ALEFix<CR>
 
 " Auto-remove trailing whitespace
 autocmd BufWritePre * %s/\s\+$//e
+
+let g:syntastic_auto_jump = 0
