@@ -16,8 +16,9 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'ctrlpvim/ctrlp.vim'
 
 " markdown
-Plugin 'jtratner/vim-flavored-markdown'
-Plugin 'JamshedVesuna/vim-markdown-preview'
+Plugin 'MikeCoder/markdown-preview.vim'
+" Plugin 'jtratner/vim-flavored-markdown'
+" Plugin 'JamshedVesuna/vim-markdown-preview'
 
 " syntax checking
 Plugin 'w0rp/ale'
@@ -167,10 +168,11 @@ set clipboard=unnamed
 " backspace behaviour
 set backspace=indent,eol,start
 
-" Github-flavored Markdown
-let vim_markdown_preview_github=1
-let vim_markdown_preview_browser='Google Chrome'
-let vim_markdown_preview_hotkey='<C-m>'
+" " Github-flavored Markdown
+noremap <c-n> :MarkdownPreview default<CR>\<CR><CR>
+" let vim_markdown_preview_github=1
+" let vim_markdown_preview_browser='Google Chrome'
+" let vim_markdown_preview_hotkey='<C-m>'
 
 " Pydiction tab completion
 let g:pydiction_location = '~/.vim/bundle/Pydiction/complete-dict'
