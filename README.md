@@ -26,3 +26,9 @@ $ brew install grip
   ```bash
   PATH="/opt/homebrew/opt/python@3.9/bin:$PATH" pip3 install pynvim
   ```
+
+Not for usage in vim, but vim mode in VSCode: execute the following command in a terminal to allow holding a direction to scroll:
+
+```
+defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+```
