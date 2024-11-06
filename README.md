@@ -1,4 +1,4 @@
-# Installation
+## Installation
 
 ```bash
 $ brew install vim
@@ -13,7 +13,7 @@ $ ./setup_vim.sh
 $ brew install grip
 ```
 
-# Usage
+## Usage
 
 * [Slime](https://github.com/jpalardy/vim-slime): open a new pane in terminal along with vim, start a named screen session (eg `screen -S vim_out`), back in vim select text and `<Ctrl-cc>` will send text to the screen session. If you don't select text, the whole paragraph will be sent.
 * [CtrlP](https://github.com/ctrlpvim/ctrlp.vim): `<Ctrl-p>` for a fuzzy file finder.
@@ -27,8 +27,15 @@ $ brew install grip
   PATH="/opt/homebrew/opt/python@3.9/bin:$PATH" pip3 install pynvim
   ```
 
-Not for usage in vim, but vim mode in VSCode: execute the following command in a terminal to allow holding a direction to scroll:
 
+# vim mode in VS Code
+
+Execute the following command in a terminal to allow holding a direction to scroll:
 ```
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+```
+
+Add the following to VSCode's `settings.json` to be able to yank into the system clipboard:
+```
+    "vim.useSystemClipboard": true
 ```
