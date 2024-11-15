@@ -53,6 +53,10 @@ add to the keybindings.json file
         "key":     "cmd+j",
         "command": "workbench.action.focusActiveEditorGroup",
         "when":    "terminalFocus"
+    },
+    {
+        "key":     "cmd+`",
+        "command": "workbench.action.terminal.runSelectedText"
     }
 ]
 ```
