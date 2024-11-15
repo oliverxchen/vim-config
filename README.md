@@ -39,3 +39,20 @@ Add the following to VSCode's `settings.json` to be able to yank into the system
 ```
     "vim.useSystemClipboard": true
 ```
+
+Go to the command pallete cmd+shift+P and select: "Preferences: Open Keyboard Shortcuts (JSON)"
+add to the keybindings.json file
+```
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key":     "cmd+j",
+        "command": "workbench.action.terminal.focus"
+    },
+    {
+        "key":     "cmd+j",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when":    "terminalFocus"
+    }
+]
+```
