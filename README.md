@@ -55,7 +55,7 @@ add to the keybindings.json file
         "when":    "terminalFocus"
     },
     {
-        "key":     "cmd+`",
+        "key":     "cmd+r",
         "command": "workbench.action.terminal.runSelectedText"
     }
 ]
