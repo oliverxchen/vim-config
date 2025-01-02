@@ -34,6 +34,13 @@ Execute the following command in a terminal to allow holding a direction to scro
 ```
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 ```
+For cursor, find the app address:
+```
+cd /Applications
+mdls -name kMDItemCFBundleIdentifier Cursor.app
+```
+And then use the output with the `defaults write` command.
+
 
 Add the following to VSCode's `settings.json` to be able to yank into the system clipboard:
 ```
