@@ -77,3 +77,26 @@ add to the keybindings.json file
     }
 ]
 ```
+
+User settings in VS Code:
+
+```
+{
+  "dart.flutterSdkPath": "/Users/oliverchen/src/flutter",
+  "editor.minimap.enabled": false,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "vim.useSystemClipboard": true,
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "git.openRepositoryInParentFolders": "never",
+  "editor.accessibilitySupport": "off",
+  "git.confirmSync": false
+}
+```
