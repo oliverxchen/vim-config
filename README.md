@@ -95,6 +95,21 @@ User settings in VS Code:
     },
     "editor.defaultFormatter": "charliermarsh.ruff"
   },
+  "[javascript]": {
+    "editor.tabSize": 2
+  },
+  "[javascriptreact]": {
+    "editor.tabSize": 2
+  },
+  "[typescript]": {
+    "editor.tabSize": 2
+  },
+  "[typescriptreact]": {
+    "editor.tabSize": 2
+  },
+  "files.associations": {
+    ".cursorrules": "plaintext"
+  },
   "git.openRepositoryInParentFolders": "never",
   "editor.accessibilitySupport": "off",
   "git.confirmSync": false
