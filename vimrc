@@ -185,3 +185,7 @@ noremap <c-m> :ALEFix<CR>
 autocmd BufWritePre * %s/\s\+$//e
 
 let g:syntastic_auto_jump = 0
+
+" for `:W` and `:Wq` typos
+command! -nargs=* W  execute 'w'  <q-args>
+command! -nargs=* Wq execute 'wq' <q-args>
