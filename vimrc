@@ -15,11 +15,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'ctrlpvim/ctrlp.vim'
 
-" markdown
-Plugin 'MikeCoder/markdown-preview.vim'
-" Plugin 'jtratner/vim-flavored-markdown'
-" Plugin 'JamshedVesuna/vim-markdown-preview'
-
 " syntax checking
 Plugin 'w0rp/ale'
 
@@ -27,7 +22,6 @@ Plugin 'w0rp/ale'
 Plugin 'Shougo/deoplete.nvim'
 Plugin 'roxma/nvim-yarp'
 Plugin 'roxma/vim-hug-neovim-rpc'
-Plugin 'ervandew/supertab'
 
 " code folding
 Plugin 'tmhedberg/SimpylFold'
@@ -126,8 +120,6 @@ set backspace=indent,eol,start
 
 "Folding based on indentation:
 autocmd FileType python set foldmethod=indent
-"use space to open folds
-nnoremap <space> za
 "----------Stop python PEP 8 stuff--------------
 
 "js stuff"
@@ -167,12 +159,6 @@ set clipboard=unnamed
 
 " backspace behaviour
 set backspace=indent,eol,start
-
-" " Github-flavored Markdown
-noremap <c-n> :MarkdownPreview default<CR>\<CR><CR>
-" let vim_markdown_preview_github=1
-" let vim_markdown_preview_browser='Google Chrome'
-" let vim_markdown_preview_hotkey='<C-m>'
 
 " Pydiction tab completion
 let g:pydiction_location = '~/.vim/bundle/Pydiction/complete-dict'
