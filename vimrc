@@ -153,6 +153,7 @@ let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 autocmd VimEnter * wincmd p
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 let NERDTreeShowHidden=1
+let g:NERDCommenterDisableInInsert = 1
 
 " yank goes to clipboard
 set clipboard=unnamed
