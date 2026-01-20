@@ -142,15 +142,14 @@ else
   colorscheme zenburn
 endif
 
-" for git, add spell checking and automatic wrapping at 72 columns
-autocmd Filetype gitcommit setlocal spell textwidth=72
+" for git, add spell checking and two space tabs
+autocmd FileType gitcommit setlocal spell tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 " NERDTree settings
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 autocmd VimEnter * wincmd p
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 let NERDTreeShowHidden=1
-let g:NERDCommenterDisableInInsert = 1
 
 " yank goes to clipboard
 set clipboard=unnamed
@@ -163,6 +162,9 @@ autocmd FileType markdown,json,yaml,toml,terraform setlocal tabstop=2 shiftwidth
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
+
+" Hard disable of NERDCommenter insert-mode mapping to prevent <Plug> leakage
+autocmd VimEnter * silent! iunmap <Plug>NERDCommenterInsert
 
 " Linting
 let g:ale_linters = {'javascript': ['eslint'], 'python': ['flake8'], 'sql': ['sqlint']}
