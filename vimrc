@@ -82,13 +82,13 @@ set noswapfile
 set nu
 
 "------------Start Python PEP 8 stuff----------------
-" Number of spaces that a pre-existing tab is equal to.
-au BufRead,BufNewFile *py,*pyw,*.c,*.h set tabstop=4
-
 " spaces for indents
-au BufRead,BufNewFile *.py,*pyw set shiftwidth=4
-au BufRead,BufNewFile *.py,*.pyw set expandtab
-au BufRead,BufNewFile *.py set softtabstop=4
+augroup LangIndent
+  autocmd!
+  autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
+  autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+  autocmd FileType go setlocal tabstop=2 shiftwidth=2 noexpandtab
+augroup END
 
 " Use the below highlight group when displaying bad whitespace is desired.
 highlight BadWhitespace ctermbg=red guibg=red
@@ -117,9 +117,6 @@ autocmd FileType python set autoindent
 " make backspaces more powerfull
 set backspace=indent,eol,start
 
-
-"Folding based on indentation:
-autocmd FileType python set foldmethod=indent
 "----------Stop python PEP 8 stuff--------------
 
 "js stuff"
@@ -158,20 +155,11 @@ let g:NERDCommenterDisableInInsert = 1
 " yank goes to clipboard
 set clipboard=unnamed
 
-" backspace behaviour
-set backspace=indent,eol,start
-
 " Pydiction tab completion
 let g:pydiction_location = '~/.vim/bundle/Pydiction/complete-dict'
 
-" spaces vs tabs
-" Number of spaces that a pre-existing tab is equal to.
-au BufRead,BufNewFile *.md,*.json set tabstop=2
-
 " spaces for indents
-au BufRead,BufNewFile *.md,*.json,*.yml,*.yaml set shiftwidth=2
-au BufRead,BufNewFile *.md,*.json,*.yml,*.yaml set expandtab
-au BufRead,BufNewFile *.md,*.json,*.yml,*.yaml set softtabstop=2
+autocmd FileType markdown,json,yaml,toml,terraform setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
