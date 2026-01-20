@@ -165,6 +165,8 @@ let g:NERDSpaceDelims = 1
 
 " Hard disable of NERDCommenter insert-mode mapping to prevent <Plug> leakage
 autocmd VimEnter * silent! iunmap <Plug>NERDCommenterInsert
+" Hard disable ALE from defining insert-mode completion <Plug>
+autocmd VimEnter * silent! iunmap <Plug>(ale_complete)
 
 " Linting
 let g:ale_linters = {'javascript': ['eslint'], 'python': ['flake8'], 'sql': ['sqlint']}
