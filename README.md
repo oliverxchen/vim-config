@@ -67,7 +67,19 @@ add to the keybindings.json file
         "key": "shift+enter",
         "command": "-python.execSelectionInTerminal",
         "when": "editorTextFocus && !findInputFocussed && !isCompositeNotebook && !jupyter.ownsSelection && !notebookEditorFocused && !replaceInputFocussed && editorLangId == 'python'"
-    }
+    },
+    {
+      "key": "cmd+i",
+      "command": "composerMode.agent",
+    },
+    {
+      "key": "shift+cmd+0",
+      "command": "workbench.action.terminal.focusPrevious",
+    },
+    {
+      "key": "shift+cmd+backspace",
+      "command": "workbench.action.terminal.focusNext",
+    },
 ]
 ```
 
