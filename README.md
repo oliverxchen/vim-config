@@ -8,6 +8,8 @@ The setup script installs or verifies Neovim and the command-line tools, creates
 
 It supports macOS and Ubuntu Linux. On macOS it installs Homebrew if needed. On Ubuntu it uses `sudo apt-get` for system prerequisites and installs Neovim and user tools without requiring root for the configuration.
 
+The JavaScript and TypeScript tools use Node.js 24 LTS on both platforms.
+
 ```bash
 git clone https://github.com/oliverxchen/vim-config.git ~/vim-config
 cd ~/vim-config

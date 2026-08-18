@@ -8,6 +8,7 @@ CONFIG_DIR="$CONFIG_HOME/nvim"
 BIN_DIR="$HOME/.local/bin"
 NPM_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/npm"
 NVIM_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/nvim-stable"
+NODE_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/node-v24"
 NODE_BIN_DIR=""
 TMP_DIR="$(mktemp -d)"
 
@@ -127,8 +128,8 @@ ensure_homebrew() {
 install_macos_packages() {
   ensure_homebrew
   log "Installing macOS packages with Homebrew"
-  brew install neovim git ripgrep fd python node go gopls uv shfmt
-  prefer_homebrew_node
+  brew install neovim git ripgrep fd python node@24 go gopls uv shfmt
+  prefer_homebrew_node24
 }
 
 install_ubuntu_packages() {
@@ -143,18 +144,80 @@ install_ubuntu_packages() {
     git \
     golang-go \
     gzip \
-    nodejs \
-    npm \
     python3 \
     python3-venv \
     ripgrep \
     shfmt \
+    xz-utils \
     wl-clipboard \
     xclip
 
   if apt-cache show gopls >/dev/null 2>&1; then
     as_root apt-get install -y gopls
   fi
+}
+
+node_is_24() {
+  local version
+  version="$(node --version 2>/dev/null || true)"
+  [[ "$version" == v24.* ]]
+}
+
+node_is_ready() {
+  node_is_24 && has_command npm && npm --version >/dev/null 2>&1
+}
+
+prefer_local_node() {
+  if [[ -x "$NODE_PREFIX/bin/node" && -x "$NODE_PREFIX/bin/npm" ]]; then
+    NODE_BIN_DIR="$NODE_PREFIX/bin"
+    export PATH="$NODE_BIN_DIR:$PATH"
+  fi
+}
+
+install_linux_node() {
+  local architecture
+  case "$(uname -m)" in
+    x86_64|amd64) architecture="x64" ;;
+    aarch64|arm64) architecture="arm64" ;;
+    *) die "Unsupported Linux architecture for Node.js: $(uname -m)" ;;
+  esac
+
+  local base_url="https://nodejs.org/dist/latest-v24.x"
+  local checksums="$TMP_DIR/node-v24-SHASUMS256.txt"
+  local archive_name
+  local checksum
+  local archive
+  local extracted
+
+  log "Installing the latest Node.js 24 LTS archive"
+  curl --fail --location --silent --show-error --retry 3 \
+    "$base_url/SHASUMS256.txt" --output "$checksums"
+  archive_name="$(awk -v architecture="$architecture" \
+    '$2 ~ ("^node-v24\\.[0-9]+\\.[0-9]+-linux-" architecture "\\.tar\\.xz$") { print $2; exit }' \
+    "$checksums")"
+  checksum="$(awk -v archive_name="$archive_name" \
+    '$2 == archive_name { print $1; exit }' "$checksums")"
+  [[ -n "$archive_name" && -n "$checksum" ]] \
+    || die "Could not find a Node.js 24 archive for Linux $(uname -m)"
+
+  archive="$TMP_DIR/$archive_name"
+  curl --fail --location --silent --show-error --retry 3 \
+    "$base_url/$archive_name" --output "$archive"
+  if ! printf '%s  %s\n' "$checksum" "$archive" | sha256sum --check --status -; then
+    die "Node.js archive checksum verification failed"
+  fi
+
+  extracted="${archive%.tar.xz}"
+  tar -xJf "$archive" -C "$TMP_DIR"
+  [[ -x "$extracted/bin/node" && -x "$extracted/bin/npm" ]] \
+    || die "Node.js archive did not contain node and npm"
+
+  mkdir -p "$(dirname "$NODE_PREFIX")"
+  if [[ -e "$NODE_PREFIX" || -L "$NODE_PREFIX" ]]; then
+    mv "$NODE_PREFIX" "$NODE_PREFIX.backup.$(date +%Y%m%d%H%M%S)"
+  fi
+  mv "$extracted" "$NODE_PREFIX"
+  prefer_local_node
 }
 
 install_linux_nvim() {
@@ -223,15 +286,34 @@ ensure_uv() {
   has_command uv || die "uv installation did not provide the uv command"
 }
 
-prefer_homebrew_node() {
+prefer_homebrew_node24() {
   local node_prefix
-  node_prefix="$(brew --prefix node 2>/dev/null || true)"
+  node_prefix="$(brew --prefix node@24 2>/dev/null || true)"
   if [[ -x "$node_prefix/bin/node" && -x "$node_prefix/bin/npm" ]]; then
     NODE_BIN_DIR="$node_prefix/bin"
-    # A versioned Homebrew Node formula can appear earlier in PATH and may be
-    # unusable after one of its shared-library dependencies is upgraded.
-    export PATH="$node_prefix/bin:$PATH"
+    export PATH="$NODE_BIN_DIR:$PATH"
   fi
+}
+
+ensure_node_runtime() {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    prefer_homebrew_node24
+    if ! node_is_ready; then
+      log "Homebrew Node.js 24 is not runnable; reinstalling it"
+      brew reinstall node@24
+      prefer_homebrew_node24
+    fi
+  else
+    prefer_local_node
+    if [[ ! -x "$NODE_PREFIX/bin/node" || ! -x "$NODE_PREFIX/bin/npm" ]] \
+      || ! node_is_ready; then
+      install_linux_node
+    fi
+  fi
+
+  node_is_ready \
+    || die "Node.js 24 LTS and npm are required for the JavaScript tools"
+  log "Using Node.js $(node --version) and npm $(npm --version)"
 }
 
 install_python_tools() {
@@ -241,22 +323,8 @@ install_python_tools() {
 }
 
 install_node_tools() {
-  if [[ "$(uname -s)" == "Darwin" ]]; then
-    prefer_homebrew_node
-  fi
-
-  if ! has_command node || ! node --version >/dev/null 2>&1 || ! has_command npm || ! npm --version >/dev/null 2>&1; then
-    if [[ "$(uname -s)" == "Darwin" ]]; then
-      log "The Homebrew Node installation is not runnable; reinstalling it"
-      brew reinstall node
-      prefer_homebrew_node
-    fi
-  fi
-
-  node --version >/dev/null 2>&1 \
-    || die "Node is installed but cannot run; repair Node before rerunning setup"
-  npm --version >/dev/null 2>&1 \
-    || die "npm is installed but cannot run; repair npm before rerunning setup"
+  node_is_ready \
+    || die "Node.js 24 LTS and npm are required for the JavaScript tools"
 
   mkdir -p "$NPM_PREFIX"
   npm config set prefix "$NPM_PREFIX"
@@ -359,6 +427,7 @@ main() {
     install_ubuntu_packages
   fi
 
+  ensure_node_runtime
   configure_shell_path
 
   ensure_neovim
