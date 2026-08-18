@@ -135,6 +135,9 @@ install_macos_packages() {
 install_ubuntu_packages() {
   has_command apt-get || die "This script supports Ubuntu Linux, which must provide apt-get"
   log "Installing Ubuntu packages"
+  if ! as_root dpkg --configure -a; then
+    die "dpkg could not finish configuring packages; run 'sudo dpkg --configure -a', resolve the reported package error, and rerun this script"
+  fi
   as_root apt-get update
   as_root apt-get install -y \
     build-essential \
