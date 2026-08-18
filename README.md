@@ -1,27 +1,35 @@
+# Neovim configuration
+
+Personal Neovim configuration for macOS and Ubuntu Linux.
+
 ## Installation
 
+The setup script installs or verifies Neovim and the command-line tools, creates a safe configuration symlink, installs the locked plugins, and is safe to run again.
+
+It supports macOS and Ubuntu Linux. On macOS it installs Homebrew if needed. On Ubuntu it uses `sudo apt-get` for system prerequisites and installs Neovim and user tools without requiring root for the configuration.
+
 ```bash
-$ brew install vim
-$ git clone https://github.com/oliverxchen/vim-config.git ~/vim-config
-$ cd ~/vim-config
-$ ./setup_vim.sh
+git clone https://github.com/oliverxchen/vim-config.git ~/vim-config
+cd ~/vim-config
+./setup_nvim.sh
 ```
 
-## Usage
+Open a new terminal after setup so the user-local tool paths take effect. Run `./setup_nvim.sh` again to update tools and reinstall the locked plugins. Use `:Lazy update` when you deliberately want newer plugin revisions, then review the lockfile.
 
-* [Slime](https://github.com/jpalardy/vim-slime): open a new pane in terminal along with vim, start a named screen session (eg `screen -S vim_out`), back in vim select text and `<Ctrl-cc>` will send text to the screen session. If you don't select text, the whole paragraph will be sent.
-* [CtrlP](https://github.com/ctrlpvim/ctrlp.vim): `<Ctrl-p>` for a fuzzy file finder.
-* [NERDTree](https://github.com/scrooloose/nerdtree): to open a folder explorer, `:NERDTree` within vim.
-* There will be an error on startup of vim 8 if you don't follow these steps:
-  * Find out what python version vim is using: `:pythonx import sys; print(sys.path)`
-  * Note that path. As of this writing it was: `/opt/homebrew/opt/python@3.9/`.
-  * In a terminal, pip install pynvim to that python version (which is not the global python version):
-  ```bash
-  PATH="/opt/homebrew/opt/python@3.9/bin:$PATH" pip3 install pynvim
-  ```
+## Included workflow
+
+- `<C-p>` finds files; `<leader>fg` searches text; `<leader>e` opens Oil.
+- `<Space>za` toggles folds. Split navigation uses `<C-w>` followed by `h`, `j`, `k`, or `l`.
+- `gc` and `gb` comment lines or blocks.
+- Fugitive provides Git commands. Gitsigns and Lualine show the current branch and changed-line counts.
+- The TypeScript language server, `ty`, `gopls`, and Taplo provide language intelligence when their tools apply.
+- Conform formats supported files on save. Ruff, ESLint, and other linters report diagnostics separately.
+- Swap files and persistent undo are enabled for recovery.
+
+For troubleshooting, use `:checkhealth`, `:LspInfo`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.11.3 or newer.
 
 
-# vim mode in VS Code
+## VS Code/Cursor vim mode
 
 Execute the following command in a terminal to allow holding a direction to scroll:
 ```

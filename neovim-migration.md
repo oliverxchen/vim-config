@@ -4,7 +4,7 @@
 
 This is a personal configuration. The repository is public only to make cloning easy, so it does not need to support many users or old versions of Vim.
 
-Assume a recent stable Neovim release on macOS or Ubuntu Linux. Use Lua and [`lazy.nvim`](https://github.com/folke/lazy.nvim), with its lockfile committed to the repository. Do not support old Neovim releases. Keep the setup simple enough to run on a Mac and on an Ubuntu VPS.
+Assume a recent stable Neovim release (0.11.3 or newer) on macOS or Ubuntu Linux. Use Lua and [`lazy.nvim`](https://github.com/folke/lazy.nvim), with its lockfile committed to the repository. Do not support old Neovim releases. Keep the setup simple enough to run on a Mac and on an Ubuntu VPS.
 
 The migration should preserve useful workflows, not every old plugin. The current repository has no plugin lockfile, and the current setup script installs Vim and Vundle. The new setup should install or verify Neovim, use an idempotent config link, and pin plugin versions.
 
