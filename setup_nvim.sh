@@ -8,6 +8,7 @@ CONFIG_DIR="$CONFIG_HOME/nvim"
 BIN_DIR="$HOME/.local/bin"
 NPM_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/npm"
 NVIM_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/nvim-stable"
+NODE_BIN_DIR=""
 TMP_DIR="$(mktemp -d)"
 
 cleanup() {
@@ -64,10 +65,16 @@ add_shell_path() {
   local marker="# >>> vim-config nvim paths >>>"
   local end_marker="# <<< vim-config nvim paths <<<"
   local path_line="export PATH=\"$BIN_DIR:$NPM_PREFIX/bin:$HOME/go/bin:\$PATH\""
+  local node_marker="# >>> vim-config node path >>>"
+  local node_end_marker="# <<< vim-config node path <<<"
+  local node_path_line="export PATH=\"$NODE_BIN_DIR:\$PATH\""
 
   touch "$profile"
   if ! grep -Fq "$marker" "$profile"; then
     printf '\n%s\n%s\n%s\n' "$marker" "$path_line" "$end_marker" >> "$profile"
+  fi
+  if [[ -n "$NODE_BIN_DIR" ]] && ! grep -Fqx "$node_path_line" "$profile"; then
+    printf '\n%s\n%s\n%s\n' "$node_marker" "$node_path_line" "$node_end_marker" >> "$profile"
   fi
 }
 
@@ -121,6 +128,7 @@ install_macos_packages() {
   ensure_homebrew
   log "Installing macOS packages with Homebrew"
   brew install neovim git ripgrep fd python node go gopls uv shfmt
+  prefer_homebrew_node
 }
 
 install_ubuntu_packages() {
@@ -215,6 +223,17 @@ ensure_uv() {
   has_command uv || die "uv installation did not provide the uv command"
 }
 
+prefer_homebrew_node() {
+  local node_prefix
+  node_prefix="$(brew --prefix node 2>/dev/null || true)"
+  if [[ -x "$node_prefix/bin/node" && -x "$node_prefix/bin/npm" ]]; then
+    NODE_BIN_DIR="$node_prefix/bin"
+    # A versioned Homebrew Node formula can appear earlier in PATH and may be
+    # unusable after one of its shared-library dependencies is upgraded.
+    export PATH="$node_prefix/bin:$PATH"
+  fi
+}
+
 install_python_tools() {
   log "Installing Python tools with uv"
   uv tool install --upgrade ty
@@ -222,10 +241,26 @@ install_python_tools() {
 }
 
 install_node_tools() {
-  has_command npm || die "npm is required for the TypeScript, ESLint, and Prettier tools"
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    prefer_homebrew_node
+  fi
+
+  if ! has_command node || ! node --version >/dev/null 2>&1 || ! has_command npm || ! npm --version >/dev/null 2>&1; then
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      log "The Homebrew Node installation is not runnable; reinstalling it"
+      brew reinstall node
+      prefer_homebrew_node
+    fi
+  fi
+
+  node --version >/dev/null 2>&1 \
+    || die "Node is installed but cannot run; repair Node before rerunning setup"
+  npm --version >/dev/null 2>&1 \
+    || die "npm is installed but cannot run; repair npm before rerunning setup"
+
   mkdir -p "$NPM_PREFIX"
   npm config set prefix "$NPM_PREFIX"
-  log "Installing JavaScript and TypeScript tools with npm"
+  log "Installing JavaScript and TypeScript tools with npm ($(node --version), npm $(npm --version))"
   npm install --global \
     eslint \
     eslint_d \
@@ -317,13 +352,14 @@ main() {
     || die "Only macOS and Linux are supported"
 
   mkdir -p "$BIN_DIR"
-  configure_shell_path
 
   if [[ "$(uname -s)" == "Darwin" ]]; then
     install_macos_packages
   else
     install_ubuntu_packages
   fi
+
+  configure_shell_path
 
   ensure_neovim
   ensure_uv
