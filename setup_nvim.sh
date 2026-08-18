@@ -308,7 +308,7 @@ link_config() {
 
 install_plugins() {
   log "Installing the locked Neovim plugins"
-  nvim --headless "+Lazy! install" +qa
+  nvim --headless "+Lazy! restore" +qa
   nvim --headless +qa
 }
 

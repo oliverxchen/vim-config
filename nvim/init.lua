@@ -24,11 +24,11 @@ if not vim.uv.fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     error("Could not clone lazy.nvim")
   end
+end
 
-  vim.fn.system({ "git", "-C", lazypath, "checkout", "--quiet", lazy_commit })
-  if vim.v.shell_error ~= 0 then
-    error("Could not check out the pinned lazy.nvim commit")
-  end
+vim.fn.system({ "git", "-C", lazypath, "checkout", "--quiet", lazy_commit })
+if vim.v.shell_error ~= 0 then
+  error("Could not check out the pinned lazy.nvim commit")
 end
 
 vim.opt.rtp:prepend(lazypath)

@@ -10,7 +10,7 @@ conform.setup({
     markdown = { "prettier" },
     python = { "ruff_format" },
     sh = { "shfmt" },
-    terraform = { "prettier" },
+    terraform = { "terraform_fmt" },
     toml = { "taplo" },
     typescript = { "prettier" },
     typescriptreact = { "prettier" },

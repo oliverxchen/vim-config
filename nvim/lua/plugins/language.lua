@@ -2,7 +2,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     version = "v2.11.0",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre", "BufNewFile", "BufWritePre" },
     dependencies = { "saghen/blink.cmp" },
     config = function()
       require("config.lsp")
@@ -18,7 +18,7 @@ return {
   },
   {
     "mfussenegger/nvim-lint",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre", "BufNewFile", "BufWritePre" },
     config = function()
       require("config.lint")
     end,
