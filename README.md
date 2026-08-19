@@ -8,7 +8,7 @@ The setup script installs or verifies Neovim and the command-line tools, creates
 
 It supports macOS and Ubuntu Linux. On macOS it installs Homebrew if needed. On Ubuntu it uses `sudo apt-get` for system prerequisites and installs Neovim and user tools without requiring root for the configuration.
 
-The JavaScript and TypeScript tools use Node.js 24 LTS on both platforms.
+The JavaScript and TypeScript tools use Node.js 24 LTS on both platforms. Treesitter uses Neovim's 0.12-compatible `nvim-treesitter` main branch; setup installs the required Tree-sitter CLI automatically.
 
 ```bash
 git clone https://github.com/oliverxchen/vim-config.git ~/vim-config
@@ -28,7 +28,7 @@ Open a new terminal after setup so the user-local tool paths take effect. Run `.
 - Conform formats supported files on save. Ruff, ESLint, and other linters report diagnostics separately.
 - Swap files and persistent undo are enabled for recovery.
 
-For troubleshooting, use `:checkhealth`, `:LspInfo`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.11.3 or newer.
+For troubleshooting, use `:checkhealth`, `:LspInfo`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.12.0 or newer.
 
 
 ## VS Code/Cursor vim mode

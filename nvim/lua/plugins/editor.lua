@@ -1,32 +1,62 @@
+local treesitter_languages = {
+  "bash",
+  "go",
+  "javascript",
+  "json",
+  "markdown",
+  "python",
+  "query",
+  "sql",
+  "terraform",
+  "toml",
+  "typescript",
+  "vim",
+  "yaml",
+}
+
+local treesitter_filetypes = {
+  "bash",
+  "go",
+  "javascript",
+  "javascriptreact",
+  "json",
+  "jsonc",
+  "markdown",
+  "python",
+  "query",
+  "sql",
+  "terraform",
+  "toml",
+  "typescript",
+  "typescriptreact",
+  "vim",
+  "yaml",
+}
+
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    branch = "master",
+    branch = "main",
+    lazy = false,
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile", "BufWritePre" },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+    config = function()
+      local treesitter = require("nvim-treesitter")
+
+      treesitter.setup()
+      -- Keep first-run setup from exiting before the asynchronous parser builds finish.
+      treesitter.install(treesitter_languages):wait(300000)
+
+      vim.treesitter.language.register("javascript", { "javascriptreact" })
+      vim.treesitter.language.register("json", { "jsonc" })
+      vim.treesitter.language.register("typescript", { "typescriptreact" })
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = treesitter_filetypes,
+        callback = function(args)
+          pcall(vim.treesitter.start, args.buf)
+        end,
+      })
     end,
-    opts = {
-      ensure_installed = {
-        "bash",
-        "go",
-        "javascript",
-        "json",
-        "markdown",
-        "python",
-        "query",
-        "sql",
-        "terraform",
-        "toml",
-        "typescript",
-        "vim",
-        "yaml",
-      },
-      auto_install = false,
-      highlight = { enable = true },
-      indent = { enable = true },
-    },
   },
   {
     "nvim-telescope/telescope.nvim",

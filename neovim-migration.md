@@ -4,7 +4,7 @@
 
 This is a personal configuration. The repository is public only to make cloning easy, so it does not need to support many users or old versions of Vim.
 
-Assume a recent stable Neovim release (0.11.3 or newer) on macOS or Ubuntu Linux. Use Lua and [`lazy.nvim`](https://github.com/folke/lazy.nvim), with its lockfile committed to the repository. Do not support old Neovim releases. Keep the setup simple enough to run on a Mac and on an Ubuntu VPS.
+Assume a recent stable Neovim release (0.12.0 or newer) on macOS or Ubuntu Linux. Use Lua and [`lazy.nvim`](https://github.com/folke/lazy.nvim), with its lockfile committed to the repository. Do not support old Neovim releases. Keep the setup simple enough to run on a Mac and on an Ubuntu VPS.
 
 The migration should preserve useful workflows, not every old plugin. The current repository has no plugin lockfile, and the current setup script installs Vim and Vundle. The new setup should install or verify Neovim, use an idempotent config link, and pin plugin versions.
 
@@ -133,7 +133,7 @@ This is the baseline stack. It covers the current workflows and adds the most us
   - Use: handle dependencies, lazy loading, updates, and a lockfile.
 - Syntax and structure
   - Recommendation: [`nvim-treesitter`](https://github.com/nvim-treesitter/nvim-treesitter).
-  - Use: provide better highlighting and support structure-aware folds and text objects. Install parsers only for languages that are used.
+  - Use the `main` branch for Neovim 0.12+, enable highlighting with Neovim's native Treesitter API, and install parsers only for languages that are used. The setup script installs Tree-sitter CLI 0.26.1 or newer for parser builds.
 - Language intelligence
   - Recommendation: Neovim's built-in LSP with [`nvim-lspconfig`](https://github.com/neovim/nvim-lspconfig) for server configurations.
   - Use: the recent `vim.lsp.config()` and `vim.lsp.enable()` APIs for definitions, references, hover, rename, code actions, diagnostics, and semantic completion.

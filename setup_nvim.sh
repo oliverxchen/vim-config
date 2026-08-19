@@ -46,7 +46,7 @@ as_root() {
   fi
 }
 
-version_at_least_0113() {
+version_at_least_0120() {
   local version="${1#v}"
   local major="${version%%.*}"
   local remainder="${version#*.}"
@@ -54,7 +54,18 @@ version_at_least_0113() {
   local patch="${remainder#*.}"
   patch="${patch%%.*}"
 
-  [[ "$major" -gt 0 || ( "$major" -eq 0 && "$minor" -gt 11 ) || ( "$major" -eq 0 && "$minor" -eq 11 && "$patch" -ge 3 ) ]]
+  [[ "$major" -gt 0 || ( "$major" -eq 0 && "$minor" -gt 12 ) || ( "$major" -eq 0 && "$minor" -eq 12 && "$patch" -ge 0 ) ]]
+}
+
+version_at_least_0261() {
+  local version="${1#v}"
+  local major="${version%%.*}"
+  local remainder="${version#*.}"
+  local minor="${remainder%%.*}"
+  local patch="${remainder#*.}"
+  patch="${patch%%.*}"
+
+  [[ "$major" -gt 0 || ( "$major" -eq 0 && "$minor" -gt 26 ) || ( "$major" -eq 0 && "$minor" -eq 26 && "$patch" -ge 1 ) ]]
 }
 
 nvim_version() {
@@ -151,6 +162,7 @@ install_ubuntu_packages() {
     python3-venv \
     ripgrep \
     shfmt \
+    unzip \
     xz-utils \
     wl-clipboard \
     xclip
@@ -255,8 +267,51 @@ install_linux_nvim() {
   ln -s "$NVIM_PREFIX/bin/nvim" "$BIN_DIR/nvim"
 }
 
+tree_sitter_version() {
+  tree-sitter --version 2>/dev/null \
+    | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p'
+}
+
+tree_sitter_is_ready() {
+  local version
+  version="$(tree_sitter_version)"
+  [[ -n "$version" ]] && version_at_least_0261 "$version"
+}
+
+install_tree_sitter_cli() {
+  local platform
+  local architecture
+  case "$(uname -s)" in
+    Darwin) platform="macos" ;;
+    Linux) platform="linux" ;;
+    *) die "Unsupported operating system for Tree-sitter: $(uname -s)" ;;
+  esac
+  case "$(uname -m)" in
+    x86_64|amd64) architecture="x64" ;;
+    aarch64|arm64) architecture="arm64" ;;
+    *) die "Unsupported architecture for Tree-sitter: $(uname -m)" ;;
+  esac
+
+  local archive="$TMP_DIR/tree-sitter-cli-${platform}-${architecture}.zip"
+  local binary="$BIN_DIR/tree-sitter.new"
+  local url="https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-cli-${platform}-${architecture}.zip"
+  log "Installing the latest Tree-sitter CLI"
+  curl --fail --location --silent --show-error --retry 3 "$url" --output "$archive"
+  unzip -p "$archive" tree-sitter > "$binary"
+  chmod 755 "$binary"
+  mv "$binary" "$BIN_DIR/tree-sitter"
+}
+
+ensure_tree_sitter_cli() {
+  if tree_sitter_is_ready; then
+    return
+  fi
+  install_tree_sitter_cli
+  tree_sitter_is_ready || die "Tree-sitter CLI 0.26.1 or newer is required for nvim-treesitter"
+}
+
 ensure_neovim() {
-  if has_command nvim && version_at_least_0113 "$(nvim_version)"; then
+  if has_command nvim && version_at_least_0120 "$(nvim_version)"; then
     log "Using Neovim $(nvim_version)"
     return
   fi
@@ -264,10 +319,10 @@ ensure_neovim() {
   if [[ "$(uname -s)" == "Darwin" ]]; then
     brew upgrade neovim || true
     has_command nvim || brew install neovim
-    version_at_least_0113 "$(nvim_version)" || die "Homebrew provided a Neovim version older than 0.11.3"
+    version_at_least_0120 "$(nvim_version)" || die "Homebrew provided a Neovim version older than 0.12.0"
   else
     install_linux_nvim
-    version_at_least_0113 "$(nvim_version)" || die "Downloaded Neovim is older than 0.11.3"
+    version_at_least_0120 "$(nvim_version)" || die "Downloaded Neovim is older than 0.12.0"
   fi
   log "Using Neovim $(nvim_version)"
 }
@@ -439,6 +494,7 @@ main() {
   install_node_tools
   install_gopls
   ensure_taplo
+  ensure_tree_sitter_cli
   ensure_fd_alias
   link_config
   install_plugins
