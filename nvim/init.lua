@@ -26,9 +26,16 @@ if not vim.uv.fs_stat(lazypath) then
   end
 end
 
-vim.fn.system({ "git", "-C", lazypath, "checkout", "--quiet", lazy_commit })
+local current_lazy_commit = vim.fn.system({ "git", "-C", lazypath, "rev-parse", "HEAD" })
 if vim.v.shell_error ~= 0 then
-  error("Could not check out the pinned lazy.nvim commit")
+  error("Could not read the lazy.nvim checkout")
+end
+
+if vim.trim(current_lazy_commit) ~= lazy_commit then
+  vim.fn.system({ "git", "-C", lazypath, "checkout", "--quiet", lazy_commit })
+  if vim.v.shell_error ~= 0 then
+    error("Could not check out the pinned lazy.nvim commit")
+  end
 end
 
 vim.opt.rtp:prepend(lazypath)
