@@ -269,7 +269,7 @@ install_linux_nvim() {
 
 tree_sitter_version() {
   tree-sitter --version 2>/dev/null \
-    | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p'
+    | sed -n 's/.*\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\).*/\1/p'
 }
 
 tree_sitter_is_ready() {
