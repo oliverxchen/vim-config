@@ -1,5 +1,7 @@
 # Neovim migration plan
 
+> Historical record: the migration is complete. See [`README.md`](README.md) for the current setup and verification instructions. References to Vim below describe the pre-migration repository.
+
 ## Goal and assumptions
 
 This is a personal configuration. The repository is public only to make cloning easy, so it does not need to support many users or old versions of Vim.
