@@ -1,47 +1,117 @@
+# Neovim configuration
+
+Personal Neovim configuration for macOS and Ubuntu Linux.
+
 ## Installation
 
+The setup script installs or verifies Neovim and the command-line tools, creates a safe configuration symlink, installs the locked plugins, and is safe to run again.
+
+It supports macOS and Ubuntu Linux. On macOS it installs Homebrew if needed. On Ubuntu it uses `sudo apt-get` for system prerequisites and installs Neovim and user tools without requiring root for the configuration.
+
+The JavaScript and TypeScript tools use Node.js 24 LTS on both platforms. Treesitter uses Neovim's 0.12-compatible `nvim-treesitter` main branch; setup installs the required Tree-sitter CLI automatically.
+
 ```bash
-$ brew install vim
-$ git clone https://github.com/oliverxchen/vim-config.git ~/vim-config
-$ cd ~/vim-config
-$ ./setup_vim.sh
+git clone https://github.com/oliverxchen/vim-config.git ~/vim-config
+cd ~/vim-config
+./setup_nvim.sh
 ```
 
-## Usage
+Open a new terminal after setup so the user-local tool paths take effect. Run `./setup_nvim.sh` again to update tools and reinstall the locked plugins. Use `:Lazy update` when you deliberately want newer plugin revisions, then review the lockfile.
 
-* [Slime](https://github.com/jpalardy/vim-slime): open a new pane in terminal along with vim, start a named screen session (eg `screen -S vim_out`), back in vim select text and `<Ctrl-cc>` will send text to the screen session. If you don't select text, the whole paragraph will be sent.
-* [CtrlP](https://github.com/ctrlpvim/ctrlp.vim): `<Ctrl-p>` for a fuzzy file finder.
-* [NERDTree](https://github.com/scrooloose/nerdtree): to open a folder explorer, `:NERDTree` within vim.
-* There will be an error on startup of vim 8 if you don't follow these steps:
-  * Find out what python version vim is using: `:pythonx import sys; print(sys.path)`
-  * Note that path. As of this writing it was: `/opt/homebrew/opt/python@3.9/`.
-  * In a terminal, pip install pynvim to that python version (which is not the global python version):
-  ```bash
-  PATH="/opt/homebrew/opt/python@3.9/bin:$PATH" pip3 install pynvim
-  ```
+## Included workflow
 
+- `<C-p>` finds files; `:Fg` searches text; `:Fb` lists buffers; `:Fe` opens Oil.
+- `:Z` toggles folds. Split navigation uses `<C-w>` followed by `h`, `j`, `k`, or `l`.
+- `gc` and `gb` comment lines or blocks.
+- Fugitive provides Git commands. Gitsigns and Lualine show the current branch and changed-line counts.
+- The TypeScript language server, `ty`, `gopls`, and Taplo provide language intelligence when their tools apply.
+- Conform formats supported files on save. Ruff, ESLint, and other linters report diagnostics separately.
+- Swap files and persistent undo are enabled for recovery.
 
-# vim mode in VS Code
+For troubleshooting, use `:checkhealth`, `:checkhealth vim.lsp`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.12.0 or newer.
+
+## Supported tools and behavior
+
+The setup installs the external tools used by this configuration. Project files should still define project-specific versions when needed.
+
+- Python: `ty` for type checking and LSP features; Ruff for diagnostics and formatting; four-space indentation.
+- JavaScript and TypeScript: `ts_ls`, ESLint, and Prettier; two-space indentation. The setup uses TypeScript 6 because `typescript-language-server` needs `tsserver.js`.
+- Go: `gopls` and `gofmt`; tabs with a width of two.
+- TOML: Treesitter highlighting and Taplo for validation, completion, and formatting.
+- JSON, YAML, and Markdown: Treesitter and Prettier. Terraform uses `terraform fmt` when Terraform is installed. SQL has highlighting only. CSV uses `csv.vim`.
+- Git commit buffers: spell checking and two-space indentation.
+
+Normal `y` and `p` use the system clipboard through `unnamedplus`. macOS uses its native clipboard; Ubuntu desktop uses Wayland or X11 tools; direct SSH uses OSC 52; SSH inside tmux uses Neovim's tmux provider. Check `:checkhealth provider` if clipboard behavior is unexpected. In tmux, `tmux info | grep 'Ms:'` should show an `Ms` capability.
+
+Swap files and persistent undo are enabled for recovery. Formatting runs on save for supported file types. The global trailing-whitespace hook from the Vim configuration was intentionally removed.
+
+## Verification
+
+Run setup twice on both macOS and Ubuntu:
+
+```bash
+./setup_nvim.sh
+./setup_nvim.sh
+```
+
+Open a new shell afterward so user-local paths are loaded. Confirm the main tools:
+
+```bash
+nvim --version
+node --version
+tsc --version
+typescript-language-server --version
+ty --version
+ruff --version
+tree-sitter --version
+taplo lsp --help
+taplo fmt --help
+```
+
+Neovim should start without errors, use the `onedark_dark` theme, show Git branch and change counts, and keep the lockfile unchanged during normal setup. Test one file of each commonly used type: Python, TypeScript, JavaScript, Go, TOML, Markdown, JSON, YAML, Terraform, SQL, and CSV. For language buffers, `:checkhealth vim.lsp` should show the expected client; `:ConformInfo` shows the selected formatter.
+
+The detailed migration plan is kept in [`neovim-migration.md`](neovim-migration.md). It records the old Vim plugin audit, rejected alternatives, and the reasons for the current choices; it is not needed for normal installation.
+
+## Replacing Vim
+
+This repository no longer needs Vim. Before uninstalling it, check personal scripts and dotfiles for calls to `vim`, `vimdiff`, or Vim-only plugins. For normal interactive use, add these settings to your shell profile:
+
+```bash
+export EDITOR=nvim
+export VISUAL=nvim
+export GIT_EDITOR=nvim
+alias vim=nvim
+alias vi=nvim
+```
+
+The environment variables cover Git and other programs that do not expand shell aliases. `vimdiff` should be replaced with `nvim -d`, or Vim should be kept if an existing script still requires it. The aliases only affect interactive shells; they do not change commands in scripts or shebangs.
+
+## VS Code/Cursor vim mode
 
 Execute the following command in a terminal to allow holding a direction to scroll:
+
 ```
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 ```
+
 For cursor, find the app address:
+
 ```
 cd /Applications
 mdls -name kMDItemCFBundleIdentifier Cursor.app
 ```
+
 And then use the output with the `defaults write` command.
 
-
 Add the following to VSCode's `settings.json` to be able to yank into the system clipboard:
+
 ```
     "vim.useSystemClipboard": true
 ```
 
 Go to the command pallete cmd+shift+P and select: "Preferences: Open Keyboard Shortcuts (JSON)"
 add to the keybindings.json file
+
 ```
 // Place your key bindings in this file to override the defaults
 [
