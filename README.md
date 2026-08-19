@@ -72,9 +72,9 @@ Neovim should start without errors, use the `onedark_dark` theme, show Git branc
 
 The detailed migration plan is kept in [`neovim-migration.md`](neovim-migration.md). It records the old Vim plugin audit, rejected alternatives, and the reasons for the current choices; it is not needed for normal installation.
 
-## Replacing Vim
+## Updates to shell profile
 
-This repository no longer needs Vim. Before uninstalling it, check personal scripts and dotfiles for calls to `vim`, `vimdiff`, or Vim-only plugins. For normal interactive use, add these settings to your shell profile:
+The setup script adds these settings to the relevant shell profile:
 
 ```bash
 export EDITOR=nvim
@@ -83,8 +83,6 @@ export GIT_EDITOR=nvim
 alias vim=nvim
 alias vi=nvim
 ```
-
-The environment variables cover Git and other programs that do not expand shell aliases. `vimdiff` should be replaced with `nvim -d`, or Vim should be kept if an existing script still requires it. The aliases only affect interactive shells; they do not change commands in scripts or shebangs.
 
 ## VS Code/Cursor vim mode
 

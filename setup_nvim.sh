@@ -72,36 +72,82 @@ nvim_version() {
 	"${1:-nvim}" --version | sed -n '1s/^NVIM v//p'
 }
 
-add_shell_path() {
+update_shell_profile() {
 	local profile="$1"
-	local marker="# >>> vim-config nvim paths >>>"
-	local end_marker="# <<< vim-config nvim paths <<<"
+	local marker="# >>> vim-config additions >>>"
+	local end_marker="# <<< vim-config additions <<<"
 	local path_line="export PATH=\"$BIN_DIR:$NPM_PREFIX/bin:$HOME/go/bin:\$PATH\""
-	local node_marker="# >>> vim-config node path >>>"
-	local node_end_marker="# <<< vim-config node path <<<"
-	local node_path_line="export PATH=\"$NODE_BIN_DIR:\$PATH\""
+	local temp
 
 	touch "$profile"
-	if ! grep -Fq "$marker" "$profile"; then
-		printf '\n%s\n%s\n%s\n' "$marker" "$path_line" "$end_marker" >>"$profile"
-	fi
-	if [[ -n "$NODE_BIN_DIR" ]] && ! grep -Fqx "$node_path_line" "$profile"; then
-		printf '\n%s\n%s\n%s\n' "$node_marker" "$node_path_line" "$node_end_marker" >>"$profile"
-	fi
+	temp="$(mktemp "$TMP_DIR/profile.XXXXXX")"
+	# Remove blocks created by this script, including the two-block format used
+	# by older versions, while preserving an incomplete block after interruption.
+	awk '
+		function is_start(line) {
+			return line == "# >>> vim-config nvim paths >>>" ||
+				line == "# >>> vim-config node path >>>" ||
+				line == "# >>> vim-config additions >>>"
+		}
+		function is_end(line) {
+			return line == "# <<< vim-config nvim paths <<<" ||
+				line == "# <<< vim-config node path <<<" ||
+				line == "# <<< vim-config additions <<<"
+		}
+		{
+			if (!in_block) {
+				if (is_start($0)) {
+					in_block = 1
+					block_count = 1
+					block[block_count] = $0
+					next
+				}
+				print
+				next
+			}
+
+			block[++block_count] = $0
+			if (is_end($0)) {
+				in_block = 0
+				block_count = 0
+			}
+		}
+		END {
+			if (in_block)
+				for (i = 1; i <= block_count; i++)
+					print block[i]
+		}
+	' "$profile" >"$temp"
+
+	{
+		printf '\n%s\n' "$marker"
+		printf '%s\n' "$path_line"
+		if [[ -n "$NODE_BIN_DIR" ]]; then
+			printf 'export PATH="%s:$PATH"\n' "$NODE_BIN_DIR"
+		fi
+		printf '%s\n' \
+			'export EDITOR=nvim' \
+			'export VISUAL=nvim' \
+			'export GIT_EDITOR=nvim' \
+			'alias vim=nvim' \
+			'alias vi=nvim'
+		printf '%s\n' "$end_marker"
+	} >>"$temp"
+	cp "$temp" "$profile"
 }
 
 configure_shell_path() {
 	case "${SHELL:-}" in
 	*/zsh)
-		add_shell_path "$HOME/.zprofile"
-		add_shell_path "$HOME/.zshrc"
+		update_shell_profile "$HOME/.zprofile"
+		update_shell_profile "$HOME/.zshrc"
 		;;
 	*/bash)
-		add_shell_path "$HOME/.profile"
-		add_shell_path "$HOME/.bashrc"
+		update_shell_profile "$HOME/.profile"
+		update_shell_profile "$HOME/.bashrc"
 		;;
 	*)
-		add_shell_path "$HOME/.profile"
+		update_shell_profile "$HOME/.profile"
 		;;
 	esac
 }
