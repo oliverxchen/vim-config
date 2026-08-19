@@ -6,6 +6,14 @@ vim.fn.mkdir(undo_dir, "p")
 vim.fn.mkdir(swap_dir, "p")
 vim.fn.mkdir(shada_dir, "p")
 
+-- gopls supports Go templates, but Neovim does not infer this filetype from
+-- the .gotmpl extension by default.
+vim.filetype.add({
+  extension = {
+    gotmpl = "gotmpl",
+  },
+})
+
 -- This configuration uses external LSP and formatter processes, not remote
 -- plugins. Keep unused language providers from producing health warnings.
 vim.g.loaded_node_provider = 0
