@@ -387,12 +387,18 @@ install_node_tools() {
 	mkdir -p "$NPM_PREFIX"
 	npm config set prefix "$NPM_PREFIX"
 	log "Installing JavaScript and TypeScript tools with npm ($(node --version), npm $(npm --version))"
+	# typescript-language-server uses the JavaScript tsserver, which TypeScript 7 no longer ships.
 	npm install --global --prefer-offline \
 		eslint \
 		eslint_d \
 		prettier \
-		typescript \
+		typescript@^6.0.0 \
 		typescript-language-server
+
+	local npm_root
+	npm_root="$(npm root --global)"
+	[[ -f "$npm_root/typescript/lib/tsserver.js" ]] ||
+		die "The installed TypeScript package does not provide tsserver.js"
 }
 
 install_gopls() {

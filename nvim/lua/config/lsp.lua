@@ -21,9 +21,32 @@ end
 
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
+local function global_typescript_path()
+  local npm = vim.fn.exepath("npm")
+  if npm == "" then
+    return nil
+  end
+
+  local roots = vim.fn.systemlist({ npm, "root", "--global" })
+  if vim.v.shell_error ~= 0 or #roots == 0 then
+    return nil
+  end
+
+  local path = vim.fs.joinpath(vim.trim(roots[1]), "typescript", "lib", "tsserver.js")
+  return vim.uv.fs_stat(path) and path or nil
+end
+
 local servers = {
   ty = {},
-  ts_ls = {},
+  ts_ls = {
+    init_options = {
+      hostInfo = "neovim",
+      tsserver = {
+        -- Prefer a project's TypeScript; use the setup script's global TS 6 fallback.
+        fallbackPath = global_typescript_path(),
+      },
+    },
+  },
   gopls = {},
   taplo = {
     cmd = { "taplo", "lsp", "stdio" },

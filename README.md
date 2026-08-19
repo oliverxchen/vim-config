@@ -28,7 +28,7 @@ Open a new terminal after setup so the user-local tool paths take effect. Run `.
 - Conform formats supported files on save. Ruff, ESLint, and other linters report diagnostics separately.
 - Swap files and persistent undo are enabled for recovery.
 
-For troubleshooting, use `:checkhealth`, `:LspInfo`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.12.0 or newer.
+For troubleshooting, use `:checkhealth`, `:checkhealth vim.lsp`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.12.0 or newer.
 
 ## VS Code/Cursor vim mode
 
