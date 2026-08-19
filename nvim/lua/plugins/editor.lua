@@ -61,7 +61,7 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     version = "v0.2.1",
-    cmd = "Telescope",
+    cmd = { "Telescope", "Fg", "Fb" },
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
       { "<C-p>", "<cmd>Telescope find_files<cr>", desc = "Find files" },
@@ -71,14 +71,28 @@ return {
         file_ignore_patterns = { "%.git/", "%.pyc$", "__pycache__/" },
       },
     },
+    config = function(_, opts)
+      require("telescope").setup(opts)
+      vim.api.nvim_create_user_command("Fg", function()
+        require("telescope.builtin").live_grep()
+      end, { desc = "Search text" })
+      vim.api.nvim_create_user_command("Fb", function()
+        require("telescope.builtin").buffers()
+      end, { desc = "Find buffer" })
+    end,
   },
   {
     "stevearc/oil.nvim",
-    cmd = "Oil",
-    keys = { { "<leader>e", "<cmd>Oil<cr>", desc = "File explorer" } },
+    cmd = { "Oil", "Fe" },
     opts = {
       view_options = { show_hidden = true },
     },
+    config = function(_, opts)
+      require("oil").setup(opts)
+      vim.api.nvim_create_user_command("Fe", function()
+        require("oil").open()
+      end, { desc = "File explorer" })
+    end,
   },
   {
     "saghen/blink.cmp",

@@ -20,8 +20,8 @@ Open a new terminal after setup so the user-local tool paths take effect. Run `.
 
 ## Included workflow
 
-- `<C-p>` finds files; `<leader>fg` searches text; `<leader>e` opens Oil.
-- `<Space>za` toggles folds. Split navigation uses `<C-w>` followed by `h`, `j`, `k`, or `l`.
+- `<C-p>` finds files; `:Fg` searches text; `:Fb` lists buffers; `:Fe` opens Oil.
+- `:Z` toggles folds. Split navigation uses `<C-w>` followed by `h`, `j`, `k`, or `l`.
 - `gc` and `gb` comment lines or blocks.
 - Fugitive provides Git commands. Gitsigns and Lualine show the current branch and changed-line counts.
 - The TypeScript language server, `ty`, `gopls`, and Taplo provide language intelligence when their tools apply.
@@ -30,28 +30,32 @@ Open a new terminal after setup so the user-local tool paths take effect. Run `.
 
 For troubleshooting, use `:checkhealth`, `:LspInfo`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.12.0 or newer.
 
-
 ## VS Code/Cursor vim mode
 
 Execute the following command in a terminal to allow holding a direction to scroll:
+
 ```
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 ```
+
 For cursor, find the app address:
+
 ```
 cd /Applications
 mdls -name kMDItemCFBundleIdentifier Cursor.app
 ```
+
 And then use the output with the `defaults write` command.
 
-
 Add the following to VSCode's `settings.json` to be able to yank into the system clipboard:
+
 ```
     "vim.useSystemClipboard": true
 ```
 
 Go to the command pallete cmd+shift+P and select: "Preferences: Open Keyboard Shortcuts (JSON)"
 add to the keybindings.json file
+
 ```
 // Place your key bindings in this file to override the defaults
 [

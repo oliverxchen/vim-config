@@ -34,9 +34,9 @@ The current `vimrc` provides the following behavior. Each item includes its purp
 - `splitbelow`
   - Purpose: open horizontal splits below the current window.
   - Decision: keep.
-- `foldmethod=indent`, `foldlevel=99`, `<Space>za`
+- `foldmethod=indent`, `foldlevel=99`, `:Z`
   - Purpose: provide simple code folding and a fold toggle.
-  - Decision: keep the keymap; start with indent folds and test Treesitter folds later.
+  - Decision: keep the fold toggle as `:Z`; start with indent folds and test Treesitter folds later.
 - Line numbers and active-window cursorline
   - Purpose: show location and highlight the current line only in the focused split.
   - Decision: keep.
@@ -257,12 +257,12 @@ These are the choices most likely to affect implementation. The context comes fr
 - Split navigation
   - Neovim: use `<C-w>` followed by `h`, `j`, `k`, or `l`.
   - Decision: do not define `<C-h>`, `<C-j>`, `<C-k>`, or `<C-l>` mappings because they are used for cursor keys.
-- `<Space>za`
-  - Neovim: same fold toggle. Set the leader before plugins load.
+- `:Z`
+  - Neovim: user command for the normal-mode `za` fold toggle.
 - `<C-p>`
   - Neovim: Telescope `find_files`.
 - `:NERDTree`
-  - Neovim: `:Oil`.
+  - Neovim: `:Fe` opens Oil; `:Oil` remains available as the plugin command.
 - `<C-M>` / `:ALEFix`
   - Neovim: removed. Conform formats the current buffer on save.
   - Decision: remove because we're changing to format-on-save.
@@ -270,8 +270,8 @@ These are the choices most likely to affect implementation. The context comes fr
   - Neovim: `gc` and `gb` through `mini.comment`.
 - `:W`, `:Wq`
   - Neovim: same custom commands.
-- New mappings
-  - Neovim: Telescope files, grep, buffers, and diagnostics under distinct `<leader>` mappings. LSP maps such as `gd`, `gr`, `K`, rename, and code actions should be buffer-local when an LSP attaches.
+- New commands
+  - Neovim: `:Fg` searches text, `:Fb` lists buffers, and `:Fe` opens Oil. Telescope files remain on `<C-p>`, with diagnostics on `<leader>fd`; LSP maps such as `gd`, `gr`, `K`, rename, and code actions should be buffer-local when an LSP attaches.
 
 ## macOS and Ubuntu setup
 
@@ -318,7 +318,7 @@ vim-config/
 - Running setup twice is safe, and the plugin lockfile controls versions.
 - Neovim starts without errors or `<Plug>` text in insert mode.
 - Clipboard copy/paste works in both environments.
-- `<C-w>` plus `h/j/k/l`, `<Space>za`, `<C-p>`, `:Oil`, Fugitive, Lualine Git information, and `gc` work.
+- `<C-w>` plus `h/j/k/l`, `:Z`, `<C-p>`, `:Fg`, `:Fb`, `:Fe`, Fugitive, Lualine Git information, and `gc` work.
 - Python has four-space indentation, `ty` type diagnostics and LSP completion/navigation, Ruff diagnostics and formatting, and format-on-save.
 - JavaScript/TypeScript has two-space indentation, LSP navigation, ESLint diagnostics, and Prettier formatting.
 - Go uses the selected tab policy and `gopls`/`gofmt` when installed.
