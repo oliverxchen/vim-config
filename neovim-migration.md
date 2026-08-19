@@ -280,7 +280,7 @@ The config should not assume Homebrew paths or macOS commands.
 - Install a recent Neovim using Homebrew on macOS. On Ubuntu, use a package source that provides the selected recent version. Verify `nvim --version` before setup.
 - Require Git, `ripgrep`, and `fd` for the baseline search workflow.
 - Verify Taplo is installed with both LSP and formatter support before testing TOML.
-- For clipboard support, use `pbcopy`/`pbpaste` on macOS. On Ubuntu desktop, use `wl-copy`/`wl-paste` or `xclip`; over SSH, use Neovim's [OSC 52 provider](https://neovim.io/doc/user/provider.html). Check `:checkhealth provider` and test copy/paste in each environment.
+- For clipboard support, use `pbcopy`/`pbpaste` on macOS. On Ubuntu desktop, use `wl-copy`/`wl-paste` or `xclip`; over direct SSH use Neovim's [OSC 52 provider](https://neovim.io/doc/user/provider.html), and inside tmux use Neovim's built-in tmux provider. Check `:checkhealth provider` and test copy/paste in each environment.
 - Keep Python, Node, Go, `ty`, Ruff, formatters, linters, and language servers project-specific where possible.
 
 Suggested repository layout:

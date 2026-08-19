@@ -21,22 +21,15 @@ vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 
-if vim.env.SSH_TTY then
-  local osc52 = require("vim.ui.clipboard.osc52")
-  vim.g.clipboard = {
-    name = "OSC-52",
-    copy = {
-      ["+"] = osc52.copy("+"),
-      ["*"] = osc52.copy("*"),
-    },
-    paste = {
-      ["+"] = osc52.paste("+"),
-      ["*"] = osc52.paste("*"),
-    },
-  }
+if vim.env.TMUX and vim.fn.executable("tmux") == 1 then
+  -- Use tmux's buffer for paste; OSC 52 clipboard reads can time out in tmux.
+  vim.g.clipboard = "tmux"
+elseif vim.env.SSH_TTY then
+  vim.g.clipboard = "osc52"
 end
 
 vim.opt.backspace = { "indent", "eol", "start" }
+-- Make ordinary yanks, deletes, changes, and puts use the system clipboard.
 vim.opt.clipboard = "unnamedplus"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.cursorline = true
