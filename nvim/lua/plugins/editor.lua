@@ -69,6 +69,10 @@ return {
     opts = {
       defaults = {
         file_ignore_patterns = { "%.git/", "%.pyc$", "__pycache__/" },
+        file_sorter = function(sorter_opts)
+          return require("telescope.sorters").get_fuzzy_file(sorter_opts)
+        end,
+        path_display = { "filename_first" },
       },
     },
     config = function(_, opts)
