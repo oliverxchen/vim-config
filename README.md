@@ -23,6 +23,7 @@ Open a new terminal after setup so the user-local tool paths take effect. Run `.
 - `<C-p>` finds files; `:Fg` searches text; `:Fb` lists buffers; `:Fe` opens Oil for buffer-style directory editing; `<leader>e` or `:E` toggles the Neo-tree sidebar, and `<leader>E` or `:Ee` reveals the current file in it.
 - `<leader>` is Space in this configuration: `<leader>e` means Space then `e`, while `<leader>E` means Space then Shift+`e`.
 - Starting `nvim` without a path opens Neo-tree automatically; closing all non-Neo-tree windows exits Neovim.
+- `:Term` opens a terminal in a 10-line-high split at the bottom of the window. Press `<Esc>` in terminal mode to enter Normal mode (equivalent to `<C-\> C-n`).
 - `:Z` toggles folds. Split navigation uses `<C-w>` followed by `h`, `j`, `k`, or `l`.
 - `gc` and `gb` comment lines or blocks.
 - Fugitive provides Git commands. Gitsigns and Lualine show the current branch and changed-line counts.

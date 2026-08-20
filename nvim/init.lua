@@ -11,6 +11,10 @@ require("config.autocmds")
 
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
 
+vim.api.nvim_create_user_command("Term", function()
+  vim.cmd("botright 10split | terminal")
+end, { desc = "Open terminal in a bottom split" })
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local lazy_commit = "85c7ff3711b730b4030d03144f6db6375044ae82"
 
