@@ -78,7 +78,7 @@ The current Vundle block declares 18 plugins, including Vundle. “Remove” mea
   - Decision: keep. It works in Neovim and is a useful fallback to terminal Git.
 - `scrooloose/nerdtree`
   - Purpose: file tree. The README documents `:NERDTree`; hidden files are enabled.
-  - Decision: replace with [Oil](https://github.com/stevearc/oil.nvim). Use a tree plugin only if the tree layout is important.
+  - Decision: keep [Oil](https://github.com/stevearc/oil.nvim) for buffer-style directory editing and add [Neo-tree](https://github.com/nvim-neo-tree/neo-tree.nvim) for a persistent tree sidebar.
 - `jistr/vim-nerdtree-tabs`
   - Purpose: keep NERDTree synchronized across tabs. No tab workflow is documented.
   - Decision: remove and test the new explorer first.
@@ -264,7 +264,7 @@ These are the choices most likely to affect implementation. The context comes fr
 - `<C-p>`
   - Neovim: Telescope `find_files`.
 - `:NERDTree`
-  - Neovim: `:Fe` opens Oil; `:Oil` remains available as the plugin command.
+  - Neovim: `:Fe` opens Oil; `<leader>e` or `:E` toggles Neo-tree; `<leader>E` or `:Ee` reveals the current file; `:Oil` remains available as the plugin command.
 - `<C-M>` / `:ALEFix`
   - Neovim: removed. Conform formats the current buffer on save.
   - Decision: remove because we're changing to format-on-save.

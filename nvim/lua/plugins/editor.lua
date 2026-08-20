@@ -95,6 +95,54 @@ return {
     end,
   },
   {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    lazy = false,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    keys = {
+      { "<leader>e", "<cmd>Neotree filesystem toggle left<cr>", desc = "Toggle file tree" },
+      { "<leader>E", "<cmd>Neotree filesystem reveal left<cr>", desc = "Reveal file in tree" },
+    },
+    opts = {
+      close_if_last_window = false,
+      default_component_configs = {
+        name = {
+          highlight_opened_files = true,
+        },
+      },
+      filesystem = {
+        filtered_items = {
+          visible = true,
+          hide_dotfiles = false,
+          hide_gitignored = false,
+        },
+        follow_current_file = {
+          enabled = true,
+          leave_dirs_open = true,
+        },
+        -- Oil remains responsible for directory buffers such as `:edit .`.
+        hijack_netrw_behavior = "disabled",
+      },
+      window = {
+        position = "left",
+        width = 30,
+      },
+    },
+    config = function(_, opts)
+      require("neo-tree").setup(opts)
+      vim.api.nvim_create_user_command("E", "Neotree filesystem toggle left", {
+        desc = "Toggle file tree",
+      })
+      vim.api.nvim_create_user_command("Ee", "Neotree filesystem reveal left", {
+        desc = "Reveal current file in tree",
+      })
+    end,
+  },
+  {
     "saghen/blink.cmp",
     version = "v1.10.2",
     event = "InsertEnter",

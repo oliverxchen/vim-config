@@ -20,7 +20,8 @@ Open a new terminal after setup so the user-local tool paths take effect. Run `.
 
 ## Included workflow
 
-- `<C-p>` finds files; `:Fg` searches text; `:Fb` lists buffers; `:Fe` opens Oil.
+- `<C-p>` finds files; `:Fg` searches text; `:Fb` lists buffers; `:Fe` opens Oil for buffer-style directory editing; `<leader>e` or `:E` toggles the Neo-tree sidebar, and `<leader>E` or `:Ee` reveals the current file in it.
+- `<leader>` is Space in this configuration: `<leader>e` means Space then `e`, while `<leader>E` means Space then Shift+`e`.
 - `:Z` toggles folds. Split navigation uses `<C-w>` followed by `h`, `j`, `k`, or `l`.
 - `gc` and `gb` comment lines or blocks.
 - Fugitive provides Git commands. Gitsigns and Lualine show the current branch and changed-line counts.
@@ -28,7 +29,7 @@ Open a new terminal after setup so the user-local tool paths take effect. Run `.
 - Conform formats supported files on save. Ruff, ESLint, and other linters report diagnostics separately.
 - Swap files and persistent undo are enabled for recovery.
 
-For troubleshooting, use `:checkhealth`, `:checkhealth vim.lsp`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.12.0 or newer.
+For troubleshooting, use `:checkhealth`, `:checkhealth vim.lsp`, `:checkhealth neo-tree`, and `:Lazy` inside Neovim. The configuration expects Neovim 0.12.0 or newer.
 
 ## Supported tools and behavior
 
@@ -68,7 +69,7 @@ taplo lsp --help
 taplo fmt --help
 ```
 
-Neovim should start without errors, use the `onedark_dark` theme, show Git branch and change counts, and keep the lockfile unchanged during normal setup. Test one file of each commonly used type: Python, TypeScript, JavaScript, Go, TOML, Markdown, JSON, YAML, Terraform, SQL, and CSV. For language buffers, `:checkhealth vim.lsp` should show the expected client; `:ConformInfo` shows the selected formatter.
+Neovim should start without errors, use the `onedark_dark` theme, show Git branch and change counts, open Neo-tree as a left sidebar with `<leader>e` or `:E`, and keep the lockfile unchanged during normal setup. Test Oil with `:Fe`, Neo-tree with `<leader>e`, `:E`, `:Ee`, and `<leader>E`, and one file of each commonly used type: Python, TypeScript, JavaScript, Go, TOML, Markdown, JSON, YAML, Terraform, SQL, and CSV. For language buffers, `:checkhealth vim.lsp` should show the expected client; `:checkhealth neo-tree` should pass; `:ConformInfo` shows the selected formatter.
 
 The detailed migration plan is kept in [`neovim-migration.md`](neovim-migration.md). It records the old Vim plugin audit, rejected alternatives, and the reasons for the current choices; it is not needed for normal installation.
 

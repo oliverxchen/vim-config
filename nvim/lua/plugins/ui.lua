@@ -5,8 +5,23 @@ return {
     lazy = false,
     priority = 1000,
     config = function()
+      require("onedarkpro").setup({
+        highlights = {
+          Visual = {
+            bg = "#333344",
+            bold = true,
+          },
+          VisualNOS = {
+            bg = "#333344",
+            bold = true,
+          },
+	  NeoTreeCursorLine = {
+            bg = "#333344",
+	  },
+        },
+      })
       vim.cmd.colorscheme("onedark_dark")
-    end,
+    end
   },
   {
     "nvim-lualine/lualine.nvim",
