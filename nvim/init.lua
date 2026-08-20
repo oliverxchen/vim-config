@@ -9,6 +9,8 @@ require("config.options")
 require("config.keymaps")
 require("config.autocmds")
 
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local lazy_commit = "85c7ff3711b730b4030d03144f6db6375044ae82"
 
