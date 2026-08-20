@@ -264,7 +264,7 @@ These are the choices most likely to affect implementation. The context comes fr
 - `<C-p>`
   - Neovim: Telescope `find_files`.
 - `:NERDTree`
-  - Neovim: `:Fe` opens Oil; `<leader>e` or `:E` toggles Neo-tree; `<leader>E` or `:Ee` reveals the current file; `:Oil` remains available as the plugin command.
+  - Neovim: `:Fe` opens Oil; `<leader>e` or `:E` toggles Neo-tree; `<leader>E` or `:Ee` reveals the current file; `nvim` without a path opens Neo-tree automatically; `:Oil` remains available as the plugin command.
 - `<C-M>` / `:ALEFix`
   - Neovim: removed. Conform formats the current buffer on save.
   - Decision: remove because we're changing to format-on-save.
