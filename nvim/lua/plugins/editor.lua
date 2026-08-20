@@ -64,13 +64,21 @@ return {
     cmd = { "Telescope", "Fg", "Fb" },
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
-      { "<C-p>", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+      {
+        "<C-p>",
+        function()
+          require("telescope.builtin").find_files({
+            hidden = true,
+          })
+        end,
+        desc = "Find files",
+      },
     },
     opts = {
       defaults = {
         file_ignore_patterns = { "%.git/", "%.pyc$", "__pycache__/" },
         file_sorter = function(sorter_opts)
-          return require("telescope.sorters").get_fuzzy_file(sorter_opts)
+          return require("telescope.sorters").get_fzy_sorter(sorter_opts)
         end,
         path_display = { "filename_first" },
       },
