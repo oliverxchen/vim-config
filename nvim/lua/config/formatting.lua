@@ -17,6 +17,16 @@ conform.setup({
     yaml = { "prettier" },
   },
   formatters = {
+    prettier = {
+      prepend_args = {
+        "--print-width",
+        "80",
+        "--prose-wrap",
+        "always",
+        "--config-precedence",
+        "file-override",
+      },
+    },
     taplo = {
       command = "taplo",
       args = { "fmt", "--stdin-filepath", "$FILENAME", "-" },
