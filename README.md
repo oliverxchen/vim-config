@@ -68,7 +68,7 @@ should still define project-specific versions when needed.
   needs `tsserver.js`.
 - Go: `gopls` and `gofmt`; tabs with a width of two.
 - TOML: Treesitter highlighting and Taplo for validation, completion, and
-  formatting.
+  formatting, with two-space indentation for nested tables and entries.
 - JSON, YAML, and Markdown: Treesitter and Prettier. Terraform uses
   `terraform fmt` when Terraform is installed. SQL has highlighting only. CSV
   uses `csv.vim`.

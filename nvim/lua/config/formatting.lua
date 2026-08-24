@@ -29,7 +29,18 @@ conform.setup({
     },
     taplo = {
       command = "taplo",
-      args = { "fmt", "--stdin-filepath", "$FILENAME", "-" },
+      args = {
+        "fmt",
+        "--stdin-filepath",
+        "$FILENAME",
+        "--option",
+        "indent_tables=true",
+        "--option",
+        "indent_entries=true",
+        "--option",
+        "indent_string=  ",
+        "-",
+      },
     },
   },
   format_on_save = function(bufnr)
