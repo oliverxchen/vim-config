@@ -23,9 +23,12 @@ cd ~/vim-config
 ```
 
 Open a new terminal after setup so the user-local tool paths take effect. Run
-`./setup_nvim.sh` again to update tools and reinstall the locked plugins. Use
-`:Lazy update` when you deliberately want newer plugin revisions, then review
-the lockfile.
+`./setup_nvim.sh` again to update tools and reinstall the locked plugins. The
+script installs `lazy.nvim` at the commit recorded in `nvim/lazy-lock.json`.
+Normal Neovim startup only verifies and loads that local checkout; it does not
+clone, fetch, or check out a Git revision. Use `:Lazy update` when you
+deliberately want newer plugin revisions, then review the lockfile and run
+setup again.
 
 ## Included workflow
 

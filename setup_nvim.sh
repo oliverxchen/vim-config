@@ -8,6 +8,9 @@ CONFIG_DIR="$CONFIG_HOME/nvim"
 BIN_DIR="$HOME/.local/bin"
 NPM_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/npm"
 NVIM_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/nvim-stable"
+LAZY_PATH="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/lazy/lazy.nvim"
+LAZY_LOCKFILE="$REPO_DIR/nvim/lazy-lock.json"
+LAZY_URL="https://github.com/folke/lazy.nvim.git"
 NODE_PREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/node-v24"
 NODE_BIN_DIR=""
 TMP_DIR="$(mktemp -d)"
@@ -30,6 +33,99 @@ warn() {
 die() {
 	printf '[nvim-config] error: %s\n' "$*" >&2
 	exit 1
+}
+
+lazy_commit_from_lockfile() {
+	awk '
+		/"lazy\.nvim"[[:space:]]*:/ { found_lazy = 1 }
+		found_lazy && /"commit"[[:space:]]*:/ {
+			line = $0
+			sub(/^.*"commit"[[:space:]]*:[[:space:]]*"/, "", line)
+			sub(/".*$/, "", line)
+			print line
+			exit
+		}
+	' "$LAZY_LOCKFILE"
+}
+
+backup_lazy_checkout() {
+	local backup
+	backup="$(mktemp -d "${LAZY_PATH}.backup.XXXXXX")"
+	rmdir "$backup"
+	mv "$LAZY_PATH" "$backup"
+	log "Moved the existing lazy.nvim checkout to $backup"
+}
+
+clone_lazy() {
+	log "Cloning lazy.nvim metadata"
+	if ! git clone --filter=blob:none --no-checkout --no-tags "$LAZY_URL" "$LAZY_PATH"; then
+		die "Could not clone lazy.nvim from $LAZY_URL"
+	fi
+}
+
+fetch_lazy_commit() {
+	local lazy_commit="$1"
+
+	if git -C "$LAZY_PATH" cat-file -e "${lazy_commit}^{commit}" >/dev/null 2>&1; then
+		return
+	fi
+
+	log "Fetching the locked lazy.nvim commit"
+	if ! git -C "$LAZY_PATH" fetch --filter=blob:none --no-tags "$LAZY_URL" "$lazy_commit"; then
+		die "Could not fetch lazy.nvim commit $lazy_commit"
+	fi
+	git -C "$LAZY_PATH" cat-file -e "${lazy_commit}^{commit}" >/dev/null 2>&1 ||
+		die "The lazy.nvim repository does not contain locked commit $lazy_commit"
+}
+
+lazy_checkout_ready() {
+	local lazy_commit="$1"
+	local current_commit
+	local checkout_status
+
+	current_commit="$(git -C "$LAZY_PATH" rev-parse --verify HEAD 2>/dev/null)" || return 1
+	[[ "$current_commit" == "$lazy_commit" ]] || return 1
+	[[ -f "$LAZY_PATH/lua/lazy/init.lua" ]] || return 1
+	checkout_status="$(git -C "$LAZY_PATH" status --porcelain --untracked-files=all 2>/dev/null)" || return 1
+	[[ -z "$checkout_status" ]]
+}
+
+ensure_lazy() {
+	local lazy_commit
+	lazy_commit="$(lazy_commit_from_lockfile)"
+	[[ "$lazy_commit" =~ ^[0-9a-f]{40}$ ]] ||
+		die "Could not read a valid lazy.nvim commit from $LAZY_LOCKFILE"
+
+	mkdir -p "$(dirname "$LAZY_PATH")"
+	if ! git -C "$LAZY_PATH" rev-parse --git-dir >/dev/null 2>&1; then
+		if [[ -e "$LAZY_PATH" || -L "$LAZY_PATH" ]]; then
+			backup_lazy_checkout
+		fi
+		clone_lazy
+	fi
+
+	fetch_lazy_commit "$lazy_commit"
+	if lazy_checkout_ready "$lazy_commit"; then
+		log "Using locked lazy.nvim commit ${lazy_commit:0:12}"
+		return
+	fi
+
+	if git -C "$LAZY_PATH" -c advice.detachedHead=false checkout --quiet --detach "$lazy_commit" &&
+		lazy_checkout_ready "$lazy_commit"; then
+		log "Using locked lazy.nvim commit ${lazy_commit:0:12}"
+		return
+	fi
+
+	# A manually modified checkout should not be overwritten. Preserve it and
+	# create a clean pinned copy so setup remains unattended and recoverable.
+	backup_lazy_checkout
+	clone_lazy
+	fetch_lazy_commit "$lazy_commit"
+	git -C "$LAZY_PATH" -c advice.detachedHead=false checkout --quiet --detach "$lazy_commit" ||
+		die "Could not check out locked lazy.nvim commit $lazy_commit"
+	lazy_checkout_ready "$lazy_commit" ||
+		die "The lazy.nvim checkout is not a clean copy of locked commit $lazy_commit"
+	log "Using locked lazy.nvim commit ${lazy_commit:0:12}"
 }
 
 has_command() {
@@ -541,6 +637,7 @@ main() {
 	configure_shell_path
 
 	ensure_neovim
+	ensure_lazy
 	ensure_uv
 	install_python_tools
 	install_node_tools

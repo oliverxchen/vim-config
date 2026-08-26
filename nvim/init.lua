@@ -16,32 +16,28 @@ vim.api.nvim_create_user_command("Term", function()
 end, { desc = "Open terminal in a bottom split" })
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-local lazy_commit = "85c7ff3711b730b4030d03144f6db6375044ae82"
+local lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json"
+local lock = vim.json.decode(table.concat(vim.fn.readfile(lockfile), "\n"))
+local lazy_commit = lock["lazy.nvim"] and lock["lazy.nvim"].commit
 
-if not vim.uv.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "--no-checkout",
-    "https://github.com/folke/lazy.nvim.git",
-    lazypath,
-  })
-  if vim.v.shell_error ~= 0 then
-    error("Could not clone lazy.nvim")
-  end
+if type(lazy_commit) ~= "string" or #lazy_commit ~= 40 or not lazy_commit:match("^[0-9a-f]+$") then
+  error("lazy-lock.json does not contain a valid lazy.nvim commit")
 end
 
-local current_lazy_commit = vim.fn.system({ "git", "-C", lazypath, "rev-parse", "HEAD" })
-if vim.v.shell_error ~= 0 then
-  error("Could not read the lazy.nvim checkout")
+if not vim.uv.fs_stat(lazypath .. "/lua/lazy/init.lua") then
+  error(
+    "lazy.nvim is not installed. Run ./setup_nvim.sh from the vim-config repository "
+      .. "to install the locked plugin versions."
+  )
 end
 
-if vim.trim(current_lazy_commit) ~= lazy_commit then
-  vim.fn.system({ "git", "-C", lazypath, "checkout", "--quiet", lazy_commit })
-  if vim.v.shell_error ~= 0 then
-    error("Could not check out the pinned lazy.nvim commit")
-  end
+local current_lazy_commit = vim.fn.system({ "git", "-C", lazypath, "rev-parse", "--verify", "HEAD" })
+if vim.v.shell_error ~= 0 or vim.trim(current_lazy_commit) ~= lazy_commit then
+  error(
+    ("lazy.nvim is not at locked commit %s. Run ./setup_nvim.sh from the vim-config repository."):format(
+      lazy_commit
+    )
+  )
 end
 
 vim.opt.rtp:prepend(lazypath)
