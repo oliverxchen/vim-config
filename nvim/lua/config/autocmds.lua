@@ -78,3 +78,4 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "WinClosed" }, {
 
 vim.cmd([[command! -nargs=* W execute 'write' <q-args>]])
 vim.cmd([[command! -nargs=* Wq execute 'wq' <q-args>]])
+vim.cmd([[command! -nargs=* Q execute 'q' <q-args>]])
