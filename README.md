@@ -49,6 +49,11 @@ setup again.
 - `gc` and `gb` comment lines or blocks.
 - Fugitive provides Git commands. Gitsigns and Lualine show the current branch
   and changed-line counts.
+- Diffview provides a single-tab review of Git changes. Use `:DiffviewOpen` to
+  compare the working tree with the index, `:DiffviewOpen HEAD~2` to compare
+  against another revision, and `:DiffviewFileHistory` or
+  `:DiffviewFileHistory %` for branch or current-file history. Close the view
+  with `:DiffviewClose`; `<Tab>` and `<S-Tab>` cycle through changed files.
 - The TypeScript language server, `ty`, `gopls`, and Taplo provide language
   intelligence when their tools apply.
 - Conform formats supported files on save. Ruff, ESLint, and other linters
