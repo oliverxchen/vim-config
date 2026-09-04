@@ -69,19 +69,24 @@ Neovim 0.12.0 or newer.
 
 ## Project-local formatters and Python tools
 
-Prettier, Ruff, and ty are not installed globally by the setup script. This
-keeps formatting and Python type checking on the versions declared by each
-project:
+Ruff and ty are not installed globally by the setup script. Prettier is
+installed in the user-local Node.js tool directory as a fallback for Markdown,
+while repository-local versions take precedence:
 
-- Prettier is resolved from the nearest `node_modules/.bin/prettier` between
-  the current file and the repository root.
+- For Markdown, Prettier is resolved from the nearest
+  `node_modules/.bin/prettier` between the current file and the repository
+  root, then from the user-local global Prettier installation.
+- Other Prettier-supported filetypes require the nearest repository-local
+  `node_modules/.bin/prettier`.
 - Ruff and ty are resolved from the active `$VIRTUAL_ENV`, or from a `.venv`,
   `venv`, or `env` directory in the current repository.
 - Repository detection follows the current file; for an unnamed buffer it uses
   Neovim's current working directory, so starting Neovim from a repository also
   works.
 - Autoformatting and repository linters are disabled when the current file is
-  outside a Git repository. A project-local formatter must also be present.
+  outside a Git repository. Markdown can use the global fallback inside a
+  repository; other Prettier-supported filetypes still need a project-local
+  formatter.
 
 For example, install the tools in the project rather than globally:
 
@@ -97,17 +102,18 @@ uv run ty --version
 ```
 
 The setup still installs `uv` itself as an environment manager, and keeps
-ESLint, `eslint_d`, TypeScript, and `typescript-language-server` in the
-user-local Node.js tool directory. Use `:ConformInfo` to see which formatter
-was selected for the current buffer.
+ESLint, `eslint_d`, Prettier, TypeScript, and `typescript-language-server` in
+the user-local Node.js tool directory. Use `:ConformInfo` to see which
+formatter was selected for the current buffer.
 
 ## Supported tools and behavior
 
 - Python: project-environment `ty` for type checking and LSP features; project-
   environment Ruff for diagnostics and formatting; four-space indentation.
 - JavaScript and TypeScript: `ts_ls`, ESLint, and project-local Prettier;
-  two-space indentation. The setup uses TypeScript 6 because
-  `typescript-language-server` needs `tsserver.js`.
+  Markdown also has a user-local global fallback; two-space indentation. The
+  setup uses TypeScript 6 because `typescript-language-server` needs
+  `tsserver.js`.
 - Go: pinned `gopls` `v0.23.0` and pinned Go `1.27.1`'s `gofmt`; tabs with a
   width of two.
 - TOML: Treesitter highlighting and Taplo for validation, completion, and

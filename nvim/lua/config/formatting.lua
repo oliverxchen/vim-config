@@ -16,6 +16,24 @@ local function project_formatter(name, resolver)
   }
 end
 
+local function prettier_command(bufnr)
+  local command = project_tools.node_tool("prettier", bufnr)
+  if command then
+    return command
+  end
+
+  if vim.bo[bufnr].filetype == "markdown" and project_tools.repository_root(bufnr) then
+    command = vim.fn.exepath("prettier")
+    if command ~= "" then
+      return command
+    end
+  end
+end
+
+local function prettier_formatter_command(_, bufnr)
+  return prettier_command(bufnr)
+end
+
 conform.setup({
   formatters_by_ft = {
     go = { "gofmt" },
@@ -32,7 +50,7 @@ conform.setup({
       return project_tools.node_tool("prettier", bufnr) and { "prettier" } or {}
     end,
     markdown = function(bufnr)
-      return project_tools.node_tool("prettier", bufnr) and { "prettier" } or {}
+      return prettier_command(bufnr) and { "prettier" } or {}
     end,
     python = function(bufnr)
       return project_tools.python_tool("ruff", bufnr) and { "ruff_format" } or {}
@@ -51,7 +69,7 @@ conform.setup({
     end,
   },
   formatters = {
-    prettier = vim.tbl_extend("force", project_formatter("prettier", project_tools.node_tool), {
+    prettier = vim.tbl_extend("force", project_formatter("prettier", prettier_formatter_command), {
       prepend_args = {
         "--print-width",
         "80",
