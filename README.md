@@ -12,9 +12,11 @@ It supports macOS and Ubuntu Linux. On macOS it installs Homebrew if needed. On
 Ubuntu it uses `sudo apt-get` for system prerequisites and installs Neovim and
 user tools without requiring root for the configuration.
 
-The JavaScript and TypeScript tools use Node.js 24 LTS on both platforms.
-Treesitter uses Neovim's 0.12-compatible `nvim-treesitter` main branch; setup
-installs the required Tree-sitter CLI automatically.
+The setup pins Node.js `24.20.0` and Go `1.27.1` on both platforms. It also
+enables the `pnpm` and `yarn` Corepack shims next to the user-local tools, so
+they continue to point at the pinned Node.js installation. Treesitter uses
+Neovim's 0.12-compatible `nvim-treesitter` main branch; setup installs the
+required Tree-sitter CLI automatically.
 
 ```bash
 git clone https://github.com/oliverxchen/vim-config.git ~/vim-config
@@ -56,25 +58,58 @@ setup again.
   with `:DiffviewClose`; `<Tab>` and `<S-Tab>` cycle through changed files.
 - The TypeScript language server, `ty`, `gopls`, and Taplo provide language
   intelligence when their tools apply.
-- Conform formats supported files on save. Ruff, ESLint, and other linters
-  report diagnostics separately.
+- Conform formats supported files on save when the appropriate project-local
+  formatter is available. Ruff, ESLint, and other linters report diagnostics
+  separately.
 - Swap files and persistent undo are enabled for recovery.
 
 For troubleshooting, use `:checkhealth`, `:checkhealth vim.lsp`,
 `:checkhealth neo-tree`, and `:Lazy` inside Neovim. The configuration expects
 Neovim 0.12.0 or newer.
 
+## Project-local formatters and Python tools
+
+Prettier, Ruff, and ty are not installed globally by the setup script. This
+keeps formatting and Python type checking on the versions declared by each
+project:
+
+- Prettier is resolved from the nearest `node_modules/.bin/prettier` between
+  the current file and the repository root.
+- Ruff and ty are resolved from the active `$VIRTUAL_ENV`, or from a `.venv`,
+  `venv`, or `env` directory in the current repository.
+- Repository detection follows the current file; for an unnamed buffer it uses
+  Neovim's current working directory, so starting Neovim from a repository also
+  works.
+- Autoformatting and repository linters are disabled when the current file is
+  outside a Git repository. A project-local formatter must also be present.
+
+For example, install the tools in the project rather than globally:
+
+```bash
+# JavaScript/TypeScript/JSON/YAML/Markdown projects
+pnpm add --save-dev prettier
+# or: npm install --save-dev prettier
+
+# Python projects using uv
+uv add --dev ruff ty
+uv run ruff --version
+uv run ty --version
+```
+
+The setup still installs `uv` itself as an environment manager, and keeps
+ESLint, `eslint_d`, TypeScript, and `typescript-language-server` in the
+user-local Node.js tool directory. Use `:ConformInfo` to see which formatter
+was selected for the current buffer.
+
 ## Supported tools and behavior
 
-The setup installs the external tools used by this configuration. Project files
-should still define project-specific versions when needed.
-
-- Python: `ty` for type checking and LSP features; Ruff for diagnostics and
-  formatting; four-space indentation.
-- JavaScript and TypeScript: `ts_ls`, ESLint, and Prettier; two-space
-  indentation. The setup uses TypeScript 6 because `typescript-language-server`
-  needs `tsserver.js`.
-- Go: `gopls` and `gofmt`; tabs with a width of two.
+- Python: project-environment `ty` for type checking and LSP features; project-
+  environment Ruff for diagnostics and formatting; four-space indentation.
+- JavaScript and TypeScript: `ts_ls`, ESLint, and project-local Prettier;
+  two-space indentation. The setup uses TypeScript 6 because
+  `typescript-language-server` needs `tsserver.js`.
+- Go: pinned `gopls` `v0.23.0` and pinned Go `1.27.1`'s `gofmt`; tabs with a
+  width of two.
 - TOML: Treesitter highlighting and Taplo for validation, completion, and
   formatting, with two-space indentation for nested tables and entries.
 - JSON, YAML, and Markdown: Treesitter and Prettier. Terraform uses
@@ -88,9 +123,10 @@ OSC 52; SSH inside tmux uses Neovim's tmux provider. Check
 `:checkhealth provider` if clipboard behavior is unexpected. In tmux,
 `tmux info | grep 'Ms:'` should show an `Ms` capability.
 
-Swap files and persistent undo are enabled for recovery. Formatting runs on save
-for supported file types. The global trailing-whitespace hook from the Vim
-configuration was intentionally removed.
+Swap files and persistent undo are enabled for recovery. Formatting runs on
+save for supported file types inside repositories when a formatter is available.
+The global trailing-whitespace hook from the Vim configuration was intentionally
+removed.
 
 ## Verification
 
@@ -106,11 +142,12 @@ tools:
 
 ```bash
 nvim --version
-node --version
+node --version # v24.20.0
+go version # go1.27.1
 tsc --version
 typescript-language-server --version
-ty --version
-ruff --version
+gopls version
+corepack --version
 tree-sitter --version
 taplo lsp --help
 taplo fmt --help

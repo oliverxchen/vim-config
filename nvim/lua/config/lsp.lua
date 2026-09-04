@@ -20,6 +20,7 @@ local function on_attach(client, bufnr)
 end
 
 local capabilities = require("blink.cmp").get_lsp_capabilities()
+local project_tools = require("config.project_tools")
 
 local function global_typescript_path()
   local npm = vim.fn.exepath("npm")
@@ -36,8 +37,29 @@ local function global_typescript_path()
   return vim.uv.fs_stat(path) and path or nil
 end
 
+local ty_commands = {}
+
 local servers = {
-  ty = {},
+  ty = {
+    cmd = function(dispatchers, config)
+      local root = (config or {}).root_dir
+      local command = root
+        and (ty_commands[root] or project_tools.python_tool_in_root("ty", root))
+      if not command then
+        return nil
+      end
+
+      return vim.lsp.rpc.start({ command, "server" }, dispatchers)
+    end,
+    root_dir = function(bufnr, on_dir)
+      local root = project_tools.repository_root(bufnr)
+      local command = project_tools.python_tool("ty", bufnr)
+      if root and command then
+        ty_commands[root] = command
+        on_dir(root)
+      end
+    end,
+  },
   ts_ls = {
     init_options = {
       hostInfo = "neovim",
