@@ -15,6 +15,14 @@ vim.api.nvim_create_user_command("Term", function()
   vim.cmd("botright 10split | terminal")
 end, { desc = "Open terminal in a bottom split" })
 
+vim.api.nvim_create_user_command("DO", "DiffviewOpen <args>", {
+  nargs = "*",
+  desc = "Open a Git diff view",
+})
+vim.api.nvim_create_user_command("DC", "DiffviewClose", {
+  desc = "Close the Git diff view",
+})
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json"
 local lock = vim.json.decode(table.concat(vim.fn.readfile(lockfile), "\n"))
